@@ -3,3 +3,13 @@ repos:
     rev: "v2.5.1"
     hooks:
       - id: prettier
+
+  - repo: https://github.com/golangci/golangci-lint
+    rev: "v1.43.0"
+    hooks:
+      - id: golangci-lint
+
+  - repo: https://github.com/dnephin/pre-commit-golang
+    rev: "ff05dff219bf08fb704e470117650205b8d1e8af"
+    hooks:
+      - id: go-mod-tidy

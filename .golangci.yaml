@@ -1,0 +1,10 @@
+linters:
+  enable-all: true
+  disable:
+    - exhaustivestruct
+    - godox
+    # the following are deprecated
+    - golint
+    - interfacer
+    - maligned
+    - scopelint
