@@ -13,3 +13,23 @@ repos:
     rev: "ff05dff219bf08fb704e470117650205b8d1e8af"
     hooks:
       - id: go-mod-tidy
+
+  - repo: local
+    hooks:
+      - id: goreleaser-check
+        name: Run goreleaser check
+        description: Check if GoReleaser configuration is valid
+        language: system
+        entry: goreleaser check
+        files: ".goreleaser.yaml"
+        pass_filenames: false
+
+  - repo: local
+    hooks:
+      - id: checkmake
+        name: Run checkmake
+        description: Run checkmake against Makefile
+        language: system
+        entry: checkmake
+        files: "Makefile"
+        pass_filenames: true
