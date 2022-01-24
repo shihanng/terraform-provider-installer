@@ -12,7 +12,19 @@ We use [pre-commit](https://pre-commit.com/) to maintain the code quality of thi
 pre-commit install
 ```
 
+### Testing with development version
+
+You added a new feature or fixed a bug in **terraform-provider-setupenv**. Now you want to test it directly with your Terraform configurations in your local machine. Here is what you can do.
+
+1. Run `make install`. This command also installs the provider in `~/.terraform.d/plugins/registry.terraform.io/shihanng/setupenv/<version>/<os_arch>/terraform-provider-setupenv`.
+
+2. Have a look at [./example](./example) for an example of Terraform configuration. You can also use the example for testing, e.g.
+   ```
+   terraform -chdir="./example" init
+   ```
+
 ## References
 
 - [Custom Providers](https://learn.hashicorp.com/collections/terraform/providers)
 - [Terraform Provider Scaffolding](https://github.com/hashicorp/terraform-provider-scaffolding)
+- [Terraform Provider Hashicups](https://github.com/hashicorp/terraform-provider-hashicups)
