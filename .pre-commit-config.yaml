@@ -14,6 +14,13 @@ repos:
     hooks:
       - id: go-mod-tidy
 
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: "v1.62.3"
+    hooks:
+      - id: terraform_fmt
+      - id: terraform_validate
+      - id: terraform_tflint
+
   - repo: local
     hooks:
       - id: goreleaser-check
