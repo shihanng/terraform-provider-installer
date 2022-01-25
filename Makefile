@@ -4,8 +4,8 @@ HOSTNAME=registry.terraform.io
 NAMESPACE=shihanng
 NAME=setupenv
 VERSION=0.0.1
-OS_ARCH=linux_amd64
 BINARY=terraform-provider-${NAME}
+OS_ARCH ?= linux_amd64
 
 build:
 	goreleaser build --single-target --snapshot --rm-dist
