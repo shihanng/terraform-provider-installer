@@ -27,6 +27,10 @@ You added a new feature or fixed a bug in **terraform-provider-setupenv**. Now y
    terraform -chdir="./example" init
    ```
 
+#### Tips
+
+1. Use `export TF_LOG_PROVIDER=DEBUG` for debugging. See <https://www.terraform.io/internals/debugging>.
+
 ## References
 
 - [Custom Providers](https://learn.hashicorp.com/collections/terraform/providers)
