@@ -2,7 +2,10 @@ module github.com/shihanng/terraform-provider-setupenv
 
 go 1.17
 
-require github.com/hashicorp/terraform-plugin-sdk/v2 v2.10.1
+require (
+	github.com/hashicorp/terraform-plugin-sdk/v2 v2.10.1
+	gotest.tools/v3 v3.1.0
+)
 
 require (
 	github.com/agext/levenshtein v1.2.2 // indirect
@@ -32,6 +35,7 @@ require (
 	github.com/mitchellh/mapstructure v1.1.2 // indirect
 	github.com/mitchellh/reflectwalk v1.0.2 // indirect
 	github.com/oklog/run v1.0.0 // indirect
+	github.com/pkg/errors v0.9.1 // indirect
 	github.com/vmihailenco/msgpack v4.0.4+incompatible // indirect
 	github.com/zclconf/go-cty v1.9.1 // indirect
 	golang.org/x/net v0.0.0-20210326060303-6b1517762897 // indirect
