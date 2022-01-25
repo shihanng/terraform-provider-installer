@@ -25,11 +25,15 @@ func init() { //nolint:gochecknoinits
 
 func New(version string) func() *schema.Provider {
 	return func() *schema.Provider {
-		p := &schema.Provider{}
+		pvd := &schema.Provider{
+			DataSourcesMap: map[string]*schema.Resource{
+				"setupenv_apt": dataSourceApt(),
+			},
+		}
 
-		p.ConfigureContextFunc = configure(version, p)
+		pvd.ConfigureContextFunc = configure(version, pvd)
 
-		return p
+		return pvd
 	}
 }
 
