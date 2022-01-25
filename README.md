@@ -32,3 +32,4 @@ You added a new feature or fixed a bug in **terraform-provider-setupenv**. Now y
 - [Custom Providers](https://learn.hashicorp.com/collections/terraform/providers)
 - [Terraform Provider Scaffolding](https://github.com/hashicorp/terraform-provider-scaffolding)
 - [Terraform Provider Hashicups](https://github.com/hashicorp/terraform-provider-hashicups)
+- [Terraform Provider GitHub](https://github.com/integrations/terraform-provider-github)
