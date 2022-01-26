@@ -31,10 +31,19 @@ jobs:
       - uses: actions/checkout@v2
       - uses: pre-commit/action@v2.0.3
 
-  tests:
-    name: Run acceptance tests
+  tests-ubuntu:
+    name: Run acceptance tests on Ubuntu
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-go@v2
       - run: make TESTARGS="-tags=apt" testacc
+
+  tests-macos:
+    name: Run acceptance tests on macOS
+    runs-on: macos-11
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+      - run: brew install sl
+      - run: make TESTARGS="-tags=brew" testacc
