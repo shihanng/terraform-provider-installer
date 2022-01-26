@@ -30,3 +30,11 @@ jobs:
           tflint_version: v0.34.1
       - uses: actions/checkout@v2
       - uses: pre-commit/action@v2.0.3
+
+  tests:
+    name: Run acceptance tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+      - run: make TESTARGS="-tags=apt" testacc
