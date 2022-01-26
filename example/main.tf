@@ -7,3 +7,11 @@ terraform {
     }
   }
 }
+
+data "setupenv_apt" "test" {
+  name = "dpkg"
+}
+
+output "out" {
+  value = data.setupenv_apt.test
+}
