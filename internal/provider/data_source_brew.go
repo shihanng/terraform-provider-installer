@@ -3,7 +3,6 @@ package provider
 import (
 	"bytes"
 	"context"
-	"errors"
 	"os/exec"
 	"strings"
 
@@ -11,11 +10,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-var errNotFound = errors.New("could not find path with suffix")
-
-func dataSourceApt() *schema.Resource {
+func dataSourceBrew() *schema.Resource {
 	return &schema.Resource{
-		ReadContext: dataSourceAptRead,
+		ReadContext: dataSourceBrewRead,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:     schema.TypeString,
@@ -29,14 +26,14 @@ func dataSourceApt() *schema.Resource {
 	}
 }
 
-func dataSourceAptRead(ctx context.Context, data *schema.ResourceData, _ interface{}) diag.Diagnostics { //nolint:dupl
+func dataSourceBrewRead(ctx context.Context, data *schema.ResourceData, _ interface{}) diag.Diagnostics { //nolint:dupl
 	var diags diag.Diagnostics
 
 	name := data.Get("name").(string) // nolint:forcetypeassert
 
 	var out bytes.Buffer
 
-	cmd := exec.CommandContext(ctx, "dpkg", "-L", name)
+	cmd := exec.CommandContext(ctx, "brew", "list", name)
 	cmd.Stdout = &out
 
 	err := cmd.Run()
@@ -62,15 +59,4 @@ func dataSourceAptRead(ctx context.Context, data *schema.ResourceData, _ interfa
 	data.SetId(validPath)
 
 	return diags
-}
-
-func findPathHasSuffix(paths []string, suffix string) (string, error) {
-	for _, p := range paths {
-		ok := strings.HasSuffix(p, suffix)
-		if ok {
-			return p, nil
-		}
-	}
-
-	return "", errNotFound
 }
