@@ -11,7 +11,7 @@ import (
 func TestDataSourceApt(t *testing.T) {
 	t.Parallel()
 
-	t.Run("with an anonymous account", func(t *testing.T) {
+	t.Run("data.setupenv_apt", func(t *testing.T) {
 		t.Parallel()
 
 		resource.Test(t, resource.TestCase{
