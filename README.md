@@ -12,6 +12,24 @@ We use [pre-commit](https://pre-commit.com/) to maintain the code quality of thi
 pre-commit install
 ```
 
+### Running automated tests
+
+Run unit tests (no resources will be created/destroy) with
+
+```
+make test
+```
+
+Run acceptance tests with
+
+```
+make TESTARGS="-tags=apt" testacc
+```
+
+We must provide the value for `-tags` because some tests only runs on specific platform. Currently the valid values for `-tags` are:
+
+- `apt` for environment that uses [APT](https://ubuntu.com/server/docs/package-management).
+
 ### Testing with development version
 
 You added a new feature or fixed a bug in **terraform-provider-setupenv**. Now you want to test it directly with your Terraform configurations in your local machine. Here is what you can do.

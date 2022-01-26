@@ -1,3 +1,5 @@
+//go:build apt
+
 package provider_test
 
 import (

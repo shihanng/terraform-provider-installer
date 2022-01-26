@@ -13,3 +13,9 @@ build:
 install: build
 	mkdir -p ~/.terraform.d/plugins/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}
 	mv dist/terraform-provider-${NAME}_${OS_ARCH}/* ~/.terraform.d/plugins/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}/${BINARY}
+
+test:
+	go test $(TESTARGS) -timeout=30s -parallel=4 ./...
+
+testacc:
+	TF_ACC=1 go test $(TESTARGS) -timeout=30s -parallel=4 ./...
