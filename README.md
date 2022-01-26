@@ -29,6 +29,7 @@ make TESTARGS="-tags=apt" testacc
 We must provide the value for `-tags` because some tests only runs on specific platform. Currently the valid values for `-tags` are:
 
 - `apt` for environment that uses [APT](https://ubuntu.com/server/docs/package-management).
+- `brew` for environment that uses [Homebrew](https://brew.sh/).
 
 ### Testing with development version
 

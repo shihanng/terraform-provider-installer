@@ -1,6 +1,7 @@
 run:
   build-tags:
     - apt
+    - brew
 linters:
   enable-all: true
   disable:
