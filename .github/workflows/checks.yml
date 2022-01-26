@@ -5,6 +5,9 @@ on:
   push:
     branches: [trunk]
 
+env:
+  GO_VERSION: "^1.17.0"
+
 jobs:
   pre-commit:
     name: Run linters with pre-commit
@@ -13,7 +16,7 @@ jobs:
       - uses: actions/setup-python@v2
       - uses: actions/setup-go@v2
         with:
-          go-version: "^1.17.0"
+          go-version: ${{env.GO_VERSION}}
       - name: Install checkmake
         run: |
           sudo apt-get update -y
@@ -37,6 +40,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-go@v2
+        with:
+          go-version: ${{env.GO_VERSION}}
       - run: make TESTARGS="-tags=apt" testacc
 
   tests-macos:
@@ -45,5 +50,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-go@v2
+        with:
+          go-version: ${{env.GO_VERSION}}
       - run: brew install sl
       - run: make TESTARGS="-tags=brew" testacc
