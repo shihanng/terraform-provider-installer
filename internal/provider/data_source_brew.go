@@ -1,8 +1,8 @@
 package provider
 
 import (
-	"bytes"
 	"context"
+	"fmt"
 	"os/exec"
 	"strings"
 
@@ -31,17 +31,20 @@ func dataSourceBrewRead(ctx context.Context, data *schema.ResourceData, _ interf
 
 	name := data.Get("name").(string) // nolint:forcetypeassert
 
-	var out bytes.Buffer
-
 	cmd := exec.CommandContext(ctx, "brew", "list", name)
-	cmd.Stdout = &out
 
-	err := cmd.Run()
+	out, err := cmd.CombinedOutput()
 	if err != nil {
-		return diag.FromErr(err)
+		return diag.Diagnostics{
+			diag.Diagnostic{
+				Severity: diag.Error,
+				Summary:  fmt.Sprintf("'%s' returns %v", strings.Join(cmd.Args, " "), err.Error()),
+				Detail:   string(out),
+			},
+		}
 	}
 
-	paths := strings.Split(out.String(), "\n")
+	paths := strings.Split(string(out), "\n")
 
 	validPath, err := findPathHasSuffix(paths, "bin/"+name)
 	if err != nil {

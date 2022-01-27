@@ -29,10 +29,31 @@ func TestDataSourceBrew(t *testing.T) {
 			},
 		})
 	})
+
+	t.Run("data.setupenv_brew error", func(t *testing.T) {
+		t.Parallel()
+
+		resource.Test(t, resource.TestCase{
+			PreCheck:          func() { testAccPreCheck(t) },
+			ProviderFactories: providerFactories,
+			Steps: []resource.TestStep{
+				{
+					Config:      testAccDataSourceBrewError,
+					ExpectError: regexp.MustCompile("No such keg:"),
+				},
+			},
+		})
+	})
 }
 
 const testAccDataSourceBrew = `
 data "setupenv_brew" "test" {
   name = "sl"
+}
+`
+
+const testAccDataSourceBrewError = `
+data "setupenv_brew" "test" {
+  name = "ls"
 }
 `
