@@ -8,10 +8,10 @@ terraform {
   }
 }
 
-data "installer_brew" "test" {
+resource "installer_brew" "test" {
   name = "sl"
 }
 
-output "out" {
-  value = data.installer_brew.test
+output "resource_test" {
+  value = installer_brew.test
 }

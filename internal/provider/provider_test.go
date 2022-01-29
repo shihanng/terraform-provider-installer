@@ -3,9 +3,17 @@ package provider_test
 import (
 	"testing"
 
+	"github.com/cockroachdb/errors"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"github.com/shihanng/terraform-provider-installer/internal/provider"
 	"gotest.tools/v3/assert"
+)
+
+var (
+	errResourceNotFound = errors.New("resource not found")
+	errIDNotSet         = errors.New("id not set")
 )
 
 // providerFactories are used to instantiate a provider during acceptance testing.
@@ -41,4 +49,19 @@ func testAccPreCheck(t *testing.T) { //nolint:thelper
 	// You can add code here to run prior to any test case execution, for example assertions
 	// about the appropriate environment variables being set are common to see in a pre-check
 	// function.
+}
+
+func testAccCheckResourceExists(name string) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		rs, ok := s.RootModule().Resources[name]
+		if !ok {
+			return errors.Wrapf(errResourceNotFound, "%s: %w", name)
+		}
+
+		if rs.Primary.ID == "" {
+			return errors.Wrapf(errIDNotSet, "resource '%s': %w", name)
+		}
+
+		return nil
+	}
 }

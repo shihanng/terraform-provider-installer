@@ -12,3 +12,16 @@ linters:
     - interfacer
     - maligned
     - scopelint
+
+linters-settings:
+  wrapcheck:
+    ignoreSigs:
+      - .Errorf(
+      - errors.New(
+      - errors.Unwrap(
+      - .Wrap(
+      - .Wrapf(
+      - .WithMessage(
+      - .WithMessagef(
+      - .WithStack(
+      - errors.CombineErrors(

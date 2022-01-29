@@ -14,11 +14,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-var (
-	errResourceNotFound = errors.New("resource not found")
-	errIDNotSet         = errors.New("id not set")
-)
-
 func TestAccResourceAptBasic(t *testing.T) { // nolint:tparallel
 	t.Parallel()
 
@@ -31,7 +26,7 @@ func TestAccResourceAptBasic(t *testing.T) { // nolint:tparallel
 				{
 					Config: testAccResourceAptBasic,
 					Check: resource.ComposeTestCheckFunc(
-						testAccCheckAptExists("installer_apt.test"),
+						testAccCheckResourceExists("installer_apt.test"),
 					),
 				},
 			},
@@ -87,18 +82,3 @@ resource "installer_apt" "test" {
   name = "abc"
 }
 `
-
-func testAccCheckAptExists(name string) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		rs, ok := s.RootModule().Resources[name]
-		if !ok {
-			return fmt.Errorf("%s: %w", name, errResourceNotFound)
-		}
-
-		if rs.Primary.ID == "" {
-			return fmt.Errorf("resource '%s': %w", name, errIDNotSet)
-		}
-
-		return nil
-	}
-}
