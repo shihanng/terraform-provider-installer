@@ -70,7 +70,7 @@ func testAccCheckAptDestroy(s *terraform.State) error {
 
 const testAccResourceAptBasic = `
 resource "installer_apt" "test" {
-  name = "sl"
+  name = "cowsay"
 }
 `
 
