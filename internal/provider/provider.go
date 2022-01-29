@@ -27,11 +27,11 @@ func New(version string) func() *schema.Provider {
 	return func() *schema.Provider {
 		pvd := &schema.Provider{
 			ResourcesMap: map[string]*schema.Resource{
-				"setupenv_apt": resourceApt(),
+				"installer_apt": resourceApt(),
 			},
 			DataSourcesMap: map[string]*schema.Resource{
-				"setupenv_apt":  dataSourceApt(),
-				"setupenv_brew": dataSourceBrew(),
+				"installer_apt":  dataSourceApt(),
+				"installer_brew": dataSourceBrew(),
 			},
 		}
 

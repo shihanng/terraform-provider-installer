@@ -12,7 +12,7 @@ import (
 func TestAccDataSourceApt(t *testing.T) {
 	t.Parallel()
 
-	t.Run("data.setupenv_apt", func(t *testing.T) {
+	t.Run("data.installer_apt", func(t *testing.T) {
 		t.Parallel()
 
 		resource.Test(t, resource.TestCase{
@@ -22,15 +22,15 @@ func TestAccDataSourceApt(t *testing.T) {
 				{
 					Config: testAccDataSourceApt,
 					Check: resource.ComposeTestCheckFunc(
-						resource.TestCheckResourceAttr("data.setupenv_apt.test", "name", "dpkg"),
-						resource.TestCheckResourceAttr("data.setupenv_apt.test", "path", "/usr/bin/dpkg"),
+						resource.TestCheckResourceAttr("data.installer_apt.test", "name", "dpkg"),
+						resource.TestCheckResourceAttr("data.installer_apt.test", "path", "/usr/bin/dpkg"),
 					),
 				},
 			},
 		})
 	})
 
-	t.Run("data.setupenv_apt error", func(t *testing.T) {
+	t.Run("data.installer_apt error", func(t *testing.T) {
 		t.Parallel()
 
 		resource.Test(t, resource.TestCase{
@@ -47,13 +47,13 @@ func TestAccDataSourceApt(t *testing.T) {
 }
 
 const testAccDataSourceApt = `
-data "setupenv_apt" "test" {
+data "installer_apt" "test" {
   name = "dpkg"
 }
 `
 
 const testAccDataSourceAptError = `
-data "setupenv_apt" "test" {
+data "installer_apt" "test" {
   name = "ls"
 }
 `

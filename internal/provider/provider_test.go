@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/shihanng/terraform-provider-setupenv/internal/provider"
+	"github.com/shihanng/terraform-provider-installer/internal/provider"
 	"gotest.tools/v3/assert"
 )
 
@@ -12,7 +12,7 @@ import (
 // The factory function will be invoked for every Terraform CLI command executed
 // to create a provider server to which the CLI can reattach.
 var providerFactories = map[string]func() (*schema.Provider, error){ //nolint:gochecknoglobals
-	"setupenv": func() (*schema.Provider, error) { //nolint:unparam
+	"installer": func() (*schema.Provider, error) { //nolint:unparam
 		return provider.New("dev")(), nil
 	},
 }

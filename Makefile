@@ -2,7 +2,7 @@
 
 HOSTNAME=registry.terraform.io
 NAMESPACE=shihanng
-NAME=setupenv
+NAME=installer
 VERSION=0.0.1
 BINARY=terraform-provider-${NAME}
 OS_ARCH ?= linux_amd64

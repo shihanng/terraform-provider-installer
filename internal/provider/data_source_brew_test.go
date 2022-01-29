@@ -12,7 +12,7 @@ import (
 func TestAccDataSourceBrew(t *testing.T) {
 	t.Parallel()
 
-	t.Run("data.setupenv_brew", func(t *testing.T) {
+	t.Run("data.installer_brew", func(t *testing.T) {
 		t.Parallel()
 
 		resource.Test(t, resource.TestCase{
@@ -22,15 +22,15 @@ func TestAccDataSourceBrew(t *testing.T) {
 				{
 					Config: testAccDataSourceBrew,
 					Check: resource.ComposeTestCheckFunc(
-						resource.TestCheckResourceAttr("data.setupenv_brew.test", "name", "sl"),
-						resource.TestMatchResourceAttr("data.setupenv_brew.test", "path", regexp.MustCompile(`[\w\./]+bin/sl$`)),
+						resource.TestCheckResourceAttr("data.installer_brew.test", "name", "sl"),
+						resource.TestMatchResourceAttr("data.installer_brew.test", "path", regexp.MustCompile(`[\w\./]+bin/sl$`)),
 					),
 				},
 			},
 		})
 	})
 
-	t.Run("data.setupenv_brew error", func(t *testing.T) {
+	t.Run("data.installer_brew error", func(t *testing.T) {
 		t.Parallel()
 
 		resource.Test(t, resource.TestCase{
@@ -47,13 +47,13 @@ func TestAccDataSourceBrew(t *testing.T) {
 }
 
 const testAccDataSourceBrew = `
-data "setupenv_brew" "test" {
+data "installer_brew" "test" {
   name = "sl"
 }
 `
 
 const testAccDataSourceBrewError = `
-data "setupenv_brew" "test" {
+data "installer_brew" "test" {
   name = "ls"
 }
 `
