@@ -2,12 +2,11 @@ package apt
 
 import (
 	"context"
-	"os"
 	"os/exec"
 	"strings"
 
 	"github.com/cockroachdb/errors"
-	"github.com/shihanng/terraform-provider-installer/internal/xerrors"
+	"github.com/shihanng/terraform-provider-installer/internal/system"
 )
 
 func Install(ctx context.Context, name string) error {
@@ -31,7 +30,7 @@ func FindInstalled(ctx context.Context, name string) (string, error) {
 
 	paths := strings.Split(string(out), "\n")
 
-	return findExecutablePath(paths)
+	return system.FindExecutablePath(paths) // nolint:wrapcheck
 }
 
 func Uninstall(ctx context.Context, name string) error {
@@ -43,20 +42,4 @@ func Uninstall(ctx context.Context, name string) error {
 	}
 
 	return nil
-}
-
-func findExecutablePath(paths []string) (string, error) {
-	for _, path := range paths {
-		info, err := os.Lstat(path)
-		if err != nil {
-			continue
-		}
-
-		// If executable by either owner, group, or other
-		if !info.IsDir() && info.Mode()&0o111 != 0 {
-			return path, nil
-		}
-	}
-
-	return "", xerrors.ErrNotExecutable
 }
