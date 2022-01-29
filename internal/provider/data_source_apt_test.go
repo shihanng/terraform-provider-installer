@@ -22,8 +22,8 @@ func TestAccDataSourceApt(t *testing.T) {
 				{
 					Config: testAccDataSourceApt,
 					Check: resource.ComposeTestCheckFunc(
-						resource.TestCheckResourceAttr("data.installer_apt.test", "name", "dpkg"),
-						resource.TestCheckResourceAttr("data.installer_apt.test", "path", "/usr/bin/dpkg"),
+						resource.TestCheckResourceAttr("data.installer_apt.test", "name", "sl"),
+						resource.TestCheckResourceAttr("data.installer_apt.test", "path", "/usr/games/sl"),
 					),
 				},
 			},
@@ -48,7 +48,7 @@ func TestAccDataSourceApt(t *testing.T) {
 
 const testAccDataSourceApt = `
 data "installer_apt" "test" {
-  name = "dpkg"
+  name = "sl"
 }
 `
 
