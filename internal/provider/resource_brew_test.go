@@ -4,7 +4,6 @@ package provider_test
 
 import (
 	"context"
-	"fmt"
 	"os"
 	"regexp"
 	"testing"
@@ -27,7 +26,7 @@ func TestAccResourceBrewBasic(t *testing.T) { // nolint:tparallel
 				{
 					Config: testAccResourceBrewBasic,
 					Check: resource.ComposeTestCheckFunc(
-						testAccCheckBrewExists("installer_brew.test"),
+						testAccCheckResourceExists("installer_brew.test"),
 					),
 				},
 			},
@@ -79,18 +78,3 @@ resource "installer_brew" "test" {
   name = "abc"
 }
 `
-
-func testAccCheckBrewExists(name string) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		rs, ok := s.RootModule().Resources[name]
-		if !ok {
-			return fmt.Errorf("%s: %w", name, errResourceNotFound)
-		}
-
-		if rs.Primary.ID == "" {
-			return fmt.Errorf("resource '%s': %w", name, errIDNotSet)
-		}
-
-		return nil
-	}
-}
