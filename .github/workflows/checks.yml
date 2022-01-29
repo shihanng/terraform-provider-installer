@@ -42,6 +42,7 @@ jobs:
       - uses: actions/setup-go@v2
         with:
           go-version: ${{env.GO_VERSION}}
+      - run: sudo apt-get install -y sl
       - run: make TESTARGS="-tags=apt" testacc
 
   tests-macos:
