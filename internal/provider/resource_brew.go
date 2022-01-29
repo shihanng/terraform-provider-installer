@@ -8,6 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/shihanng/terraform-provider-installer/internal/brew"
+	"github.com/shihanng/terraform-provider-installer/internal/xerrors"
 )
 
 const brewIDPrefix = "brew:"
@@ -46,7 +47,7 @@ func resourceBrewCreate(ctx context.Context, data *schema.ResourceData, meta int
 	name := data.Get("name").(string) // nolint:forcetypeassert
 
 	if err := brew.Install(ctx, name); err != nil {
-		return brew.ToDiags(err)
+		return xerrors.ToDiags(err)
 	}
 
 	data.SetId(brewID(name))
@@ -61,7 +62,7 @@ func resourceBrewRead(ctx context.Context, data *schema.ResourceData, m interfac
 
 	path, err := brew.FindInstalled(ctx, name)
 	if err != nil {
-		return brew.ToDiags(err)
+		return xerrors.ToDiags(err)
 	}
 
 	if err := data.Set("name", name); err != nil {
@@ -81,7 +82,7 @@ func resourceBrewDelete(ctx context.Context, data *schema.ResourceData, m interf
 	name := nameFromBrewID(data.Id())
 
 	if err := brew.Uninstall(ctx, name); err != nil {
-		return brew.ToDiags(err)
+		return xerrors.ToDiags(err)
 	}
 
 	data.SetId("")

@@ -8,6 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/shihanng/terraform-provider-installer/internal/apt"
+	"github.com/shihanng/terraform-provider-installer/internal/xerrors"
 )
 
 const aptIDPrefix = "apt:"
@@ -46,7 +47,7 @@ func resourceAptCreate(ctx context.Context, data *schema.ResourceData, meta inte
 	name := data.Get("name").(string) // nolint:forcetypeassert
 
 	if err := apt.Install(ctx, name); err != nil {
-		return apt.ToDiags(err)
+		return xerrors.ToDiags(err)
 	}
 
 	data.SetId(aptID(name))
@@ -61,7 +62,7 @@ func resourceAptRead(ctx context.Context, data *schema.ResourceData, m interface
 
 	path, err := apt.FindInstalled(ctx, name)
 	if err != nil {
-		return apt.ToDiags(err)
+		return xerrors.ToDiags(err)
 	}
 
 	if err := data.Set("name", name); err != nil {
@@ -81,7 +82,7 @@ func resourceAptDelete(ctx context.Context, data *schema.ResourceData, m interfa
 	name := nameFromAptID(data.Id())
 
 	if err := apt.Uninstall(ctx, name); err != nil {
-		return apt.ToDiags(err)
+		return xerrors.ToDiags(err)
 	}
 
 	data.SetId("")

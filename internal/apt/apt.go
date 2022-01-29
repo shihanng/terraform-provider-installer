@@ -7,10 +7,8 @@ import (
 	"strings"
 
 	"github.com/cockroachdb/errors"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+	"github.com/shihanng/terraform-provider-installer/internal/xerrors"
 )
-
-var errNotExecutable = errors.New("could not find executable path")
 
 func Install(ctx context.Context, name string) error {
 	cmd := exec.CommandContext(ctx, "sudo", "apt-get", "-y", "install", name)
@@ -60,15 +58,5 @@ func findExecutablePath(paths []string) (string, error) {
 		}
 	}
 
-	return "", errNotExecutable
-}
-
-func ToDiags(err error) diag.Diagnostics {
-	return diag.Diagnostics{
-		diag.Diagnostic{
-			Severity: diag.Error,
-			Summary:  err.Error(),
-			Detail:   errors.FlattenDetails(err),
-		},
-	}
+	return "", xerrors.ErrNotExecutable
 }
