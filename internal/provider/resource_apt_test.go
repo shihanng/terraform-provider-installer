@@ -22,7 +22,7 @@ var (
 func TestAccResourceAptBasic(t *testing.T) { // nolint:tparallel
 	t.Parallel()
 
-	t.Run("resource.setupenv_apt", func(t *testing.T) { // nolint:paralleltest // due to locking
+	t.Run("resource.installer_apt", func(t *testing.T) { // nolint:paralleltest // due to locking
 		resource.Test(t, resource.TestCase{
 			PreCheck:          func() { testAccPreCheck(t) },
 			ProviderFactories: providerFactories,
@@ -31,14 +31,14 @@ func TestAccResourceAptBasic(t *testing.T) { // nolint:tparallel
 				{
 					Config: testAccResourceAptBasic,
 					Check: resource.ComposeTestCheckFunc(
-						testAccCheckAptExists("setupenv_apt.test"),
+						testAccCheckAptExists("installer_apt.test"),
 					),
 				},
 			},
 		})
 	})
 
-	t.Run("resource.setupenv_apt error", func(t *testing.T) { // nolint:paralleltest // due to locking
+	t.Run("resource.installer_apt error", func(t *testing.T) { // nolint:paralleltest // due to locking
 		resource.Test(t, resource.TestCase{
 			PreCheck:          func() { testAccPreCheck(t) },
 			ProviderFactories: providerFactories,
@@ -55,7 +55,7 @@ func TestAccResourceAptBasic(t *testing.T) { // nolint:tparallel
 
 func testAccCheckAptDestroy(s *terraform.State) error {
 	for _, resource := range s.RootModule().Resources {
-		if resource.Type != "setupenv_apt" {
+		if resource.Type != "installer_apt" {
 			continue
 		}
 
@@ -77,13 +77,13 @@ func testAccCheckAptDestroy(s *terraform.State) error {
 }
 
 const testAccResourceAptBasic = `
-resource "setupenv_apt" "test" {
+resource "installer_apt" "test" {
   name = "sl"
 }
 `
 
 const testAccResourceAptBasicError = `
-resource "setupenv_apt" "test" {
+resource "installer_apt" "test" {
   name = "abc"
 }
 `

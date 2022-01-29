@@ -1,6 +1,9 @@
-# terraform-provider-setupenv
+# terraform-provider-installer
 
-**terraform-provider-setupenv** is a [Terraform](https://www.terraform.io/) provider to set up a development environment machine.
+**terraform-provider-installer** is a [Terraform](https://www.terraform.io/) provider for installing softwares via various package management tools. Currently, **terraform-provider-installer** supports
+
+- [APT](https://ubuntu.com/server/docs/package-management)
+- [Homebrew](https://brew.sh/)
 
 ## Development
 
@@ -33,9 +36,9 @@ We must provide the value for `-tags` because some tests only runs on specific p
 
 ### Testing with development version
 
-You added a new feature or fixed a bug in **terraform-provider-setupenv**. Now you want to test it directly with your Terraform configurations in your local machine. Here is what you can do.
+You added a new feature or fixed a bug in **terraform-provider-installer**. Now you want to test it directly with your Terraform configurations in your local machine. Here is what you can do.
 
-1. Run `make install`. This command also installs the provider in `~/.terraform.d/plugins/registry.terraform.io/shihanng/setupenv/<version>/<os_arch>/terraform-provider-setupenv`. On macOS, use
+1. Run `make install`. This command also installs the provider in `~/.terraform.d/plugins/registry.terraform.io/shihanng/installer/<version>/<os_arch>/terraform-provider-installer`. On macOS, use
 
    ```
    OS_ARCH=darwin_arm64 make install

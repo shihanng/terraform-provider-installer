@@ -1,4 +1,4 @@
-module github.com/shihanng/terraform-provider-setupenv
+module github.com/shihanng/terraform-provider-installer
 
 go 1.17
 
