@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-func TestDataSourceApt(t *testing.T) {
+func TestAccDataSourceApt(t *testing.T) {
 	t.Parallel()
 
 	t.Run("data.setupenv_apt", func(t *testing.T) {

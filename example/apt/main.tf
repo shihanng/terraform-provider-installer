@@ -12,6 +12,14 @@ data "setupenv_apt" "test" {
   name = "dpkg"
 }
 
-output "out" {
+resource "setupenv_apt" "test" {
+  name = "sl"
+}
+
+output "data_test" {
   value = data.setupenv_apt.test
+}
+
+output "resource_test" {
+  value = setupenv_apt.test
 }
