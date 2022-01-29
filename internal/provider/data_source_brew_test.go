@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-func TestDataSourceBrew(t *testing.T) {
+func TestAccDataSourceBrew(t *testing.T) {
 	t.Parallel()
 
 	t.Run("data.setupenv_brew", func(t *testing.T) {
