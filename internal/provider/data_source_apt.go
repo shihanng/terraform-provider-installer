@@ -44,7 +44,7 @@ func dataSourceAptRead(ctx context.Context, data *schema.ResourceData, _ interfa
 		return diag.FromErr(err)
 	}
 
-	data.SetId(path)
+	data.SetId(aptID(name))
 
 	return diags
 }

@@ -44,7 +44,7 @@ func dataSourceBrewRead(ctx context.Context, data *schema.ResourceData, _ interf
 		return diag.FromErr(err)
 	}
 
-	data.SetId(path)
+	data.SetId(brewID(name))
 
 	return diags
 }
