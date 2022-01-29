@@ -3,6 +3,7 @@ repos:
     rev: "v2.5.1"
     hooks:
       - id: prettier
+        exclude: ^docs/
 
   - repo: https://github.com/golangci/golangci-lint
     rev: "v1.43.0"
@@ -39,3 +40,13 @@ repos:
         entry: checkmake
         files: "Makefile"
         pass_filenames: true
+
+  - repo: local
+    hooks:
+      - id: terraform-plugin-docs
+        name: Run terraform-plugin-docs
+        description: "Runs terraform-plugin-docs"
+        entry: tfplugindocs
+        files: '\.go$'
+        language: "system"
+        pass_filenames: false
