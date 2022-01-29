@@ -1,56 +1,57 @@
-//go:build apt
+//go:build brew
 
 package provider_test
 
 import (
-	"errors"
+	"context"
 	"fmt"
 	"os"
-	"os/exec"
 	"regexp"
 	"testing"
 
+	"github.com/cockroachdb/errors"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/shihanng/terraform-provider-installer/internal/brew"
 )
 
-func TestAccResourceAptBasic(t *testing.T) { // nolint:tparallel
+func TestAccResourceBrewBasic(t *testing.T) { // nolint:tparallel
 	t.Parallel()
 
-	t.Run("resource.installer_apt", func(t *testing.T) { // nolint:paralleltest // due to locking
+	t.Run("resource.installer_brew", func(t *testing.T) { // nolint:paralleltest // due to locking
 		resource.Test(t, resource.TestCase{
 			PreCheck:          func() { testAccPreCheck(t) },
 			ProviderFactories: providerFactories,
-			CheckDestroy:      testAccCheckAptDestroy,
+			CheckDestroy:      testAccCheckBrewDestroy,
 			Steps: []resource.TestStep{
 				{
-					Config: testAccResourceAptBasic,
+					Config: testAccResourceBrewBasic,
 					Check: resource.ComposeTestCheckFunc(
-						testAccCheckAptExists("installer_apt.test"),
+						testAccCheckBrewExists("installer_brew.test"),
 					),
 				},
 			},
 		})
 	})
 
-	t.Run("resource.installer_apt error", func(t *testing.T) { // nolint:paralleltest // due to locking
+	t.Run("resource.installer_brew error", func(t *testing.T) { // nolint:paralleltest // due to locking
 		resource.Test(t, resource.TestCase{
 			PreCheck:          func() { testAccPreCheck(t) },
 			ProviderFactories: providerFactories,
-			CheckDestroy:      testAccCheckAptDestroy,
+			CheckDestroy:      testAccCheckBrewDestroy,
 			Steps: []resource.TestStep{
 				{
-					Config:      testAccResourceAptBasicError,
-					ExpectError: regexp.MustCompile("Unable to locate package"),
+					Config:      testAccResourceBrewBasicError,
+					ExpectError: regexp.MustCompile("No available formula with the name"),
 				},
 			},
 		})
 	})
 }
 
-func testAccCheckAptDestroy(s *terraform.State) error {
+func testAccCheckBrewDestroy(s *terraform.State) error {
 	for _, resource := range s.RootModule().Resources {
-		if resource.Type != "installer_apt" {
+		if resource.Type != "installer_brew" {
 			continue
 		}
 
@@ -58,32 +59,28 @@ func testAccCheckAptDestroy(s *terraform.State) error {
 		name := resource.Primary.Attributes["name"]
 
 		if _, err := os.Stat(path); !errors.Is(err, os.ErrNotExist) {
-			cmd := exec.Command("sudo", "apt-get", "-y", "remove", name)
+			uninstallErr := brew.Uninstall(context.Background(), name)
 
-			if out, err := cmd.CombinedOutput(); err != nil {
-				return fmt.Errorf("%s: %w", string(out), err)
-			}
-
-			return fmt.Errorf("unexpect error from stat: %w", err)
+			return errors.CombineErrors(err, uninstallErr)
 		}
 	}
 
 	return nil
 }
 
-const testAccResourceAptBasic = `
-resource "installer_apt" "test" {
-  name = "sl"
+const testAccResourceBrewBasic = `
+resource "installer_brew" "test" {
+  name = "cowsay"
 }
 `
 
-const testAccResourceAptBasicError = `
-resource "installer_apt" "test" {
+const testAccResourceBrewBasicError = `
+resource "installer_brew" "test" {
   name = "abc"
 }
 `
 
-func testAccCheckAptExists(name string) resource.TestCheckFunc {
+func testAccCheckBrewExists(name string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[name]
 		if !ok {

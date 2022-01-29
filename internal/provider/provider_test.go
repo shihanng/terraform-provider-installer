@@ -3,9 +3,15 @@ package provider_test
 import (
 	"testing"
 
+	"github.com/cockroachdb/errors"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/shihanng/terraform-provider-installer/internal/provider"
 	"gotest.tools/v3/assert"
+)
+
+var (
+	errResourceNotFound = errors.New("resource not found")
+	errIDNotSet         = errors.New("id not set")
 )
 
 // providerFactories are used to instantiate a provider during acceptance testing.
