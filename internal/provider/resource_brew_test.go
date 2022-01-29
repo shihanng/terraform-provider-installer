@@ -1,5 +1,6 @@
 //go:build brew
 
+// nolint:dupl
 package provider_test
 
 import (

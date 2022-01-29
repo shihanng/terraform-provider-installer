@@ -1,4 +1,4 @@
-package brew
+package apt
 
 import (
 	"context"
@@ -10,7 +10,7 @@ import (
 )
 
 func Install(ctx context.Context, name string) error {
-	cmd := exec.CommandContext(ctx, "brew", "install", name)
+	cmd := exec.CommandContext(ctx, "sudo", "apt-get", "-y", "install", name)
 
 	out, err := cmd.CombinedOutput()
 	if err != nil {
@@ -21,7 +21,7 @@ func Install(ctx context.Context, name string) error {
 }
 
 func FindInstalled(ctx context.Context, name string) (string, error) {
-	cmd := exec.CommandContext(ctx, "brew", "list", name)
+	cmd := exec.CommandContext(ctx, "dpkg", "-L", name)
 
 	out, err := cmd.CombinedOutput()
 	if err != nil {
@@ -34,7 +34,7 @@ func FindInstalled(ctx context.Context, name string) (string, error) {
 }
 
 func Uninstall(ctx context.Context, name string) error {
-	cmd := exec.CommandContext(ctx, "brew", "uninstall", name)
+	cmd := exec.CommandContext(ctx, "sudo", "apt-get", "-y", "remove", name)
 
 	out, err := cmd.CombinedOutput()
 	if err != nil {
