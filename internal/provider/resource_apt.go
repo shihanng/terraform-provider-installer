@@ -1,16 +1,24 @@
+// nolint:dupl
 package provider
 
 import (
 	"context"
-	"fmt"
-	"os"
-	"os/exec"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/shihanng/terraform-provider-installer/internal/apt"
 )
+
+const aptIDPrefix = "apt:"
+
+func aptID(name string) string {
+	return aptIDPrefix + name
+}
+
+func nameFromAptID(id string) string {
+	return strings.TrimPrefix(id, aptIDPrefix)
+}
 
 func resourceApt() *schema.Resource {
 	return &schema.Resource{
@@ -35,58 +43,15 @@ func resourceApt() *schema.Resource {
 }
 
 func resourceAptCreate(ctx context.Context, data *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	var diags diag.Diagnostics
-
 	name := data.Get("name").(string) // nolint:forcetypeassert
 
-	cmd := exec.CommandContext(ctx, "sudo", "apt-get", "-y", "install", name)
-
-	out, err := cmd.CombinedOutput()
-	if err != nil {
-		return diag.Diagnostics{
-			diag.Diagnostic{
-				Severity: diag.Error,
-				Summary:  fmt.Sprintf("'%s' returns %v", strings.Join(cmd.Args, " "), err.Error()),
-				Detail:   string(out),
-			},
-		}
+	if err := apt.Install(ctx, name); err != nil {
+		return apt.ToDiags(err)
 	}
 
 	data.SetId(aptID(name))
 
-	resourceAptRead(ctx, data, meta)
-
-	return diags
-}
-
-const aptIDPrefix = "apt:"
-
-func aptID(name string) string {
-	return aptIDPrefix + name
-}
-
-func nameFromAptID(id string) string {
-	return strings.TrimPrefix(id, aptIDPrefix)
-}
-
-func findPathIsExecutable(ctx context.Context, paths []string) (string, error) {
-	tflog.Debug(ctx, "recevied paths", "paths", paths)
-
-	for _, path := range paths {
-		info, err := os.Lstat(path)
-		if err != nil {
-			tflog.Debug(ctx, "lstat error", "error", err, "path", path)
-
-			continue
-		}
-
-		// If executable by either owner, group, or other
-		if !info.IsDir() && info.Mode()&0o111 != 0 {
-			return path, nil
-		}
-	}
-
-	return "", errNotFound
+	return resourceAptRead(ctx, data, meta)
 }
 
 func resourceAptRead(ctx context.Context, data *schema.ResourceData, m interface{}) diag.Diagnostics {
@@ -94,31 +59,16 @@ func resourceAptRead(ctx context.Context, data *schema.ResourceData, m interface
 
 	name := nameFromAptID(data.Id())
 
-	cmd := exec.CommandContext(ctx, "dpkg", "-L", name)
-
-	out, err := cmd.CombinedOutput()
+	path, err := apt.FindInstalled(ctx, name)
 	if err != nil {
-		return diag.Diagnostics{
-			diag.Diagnostic{
-				Severity: diag.Error,
-				Summary:  fmt.Sprintf("'%s' returns %v", strings.Join(cmd.Args, " "), err.Error()),
-				Detail:   string(out),
-			},
-		}
-	}
-
-	paths := strings.Split(string(out), "\n")
-
-	validPath, err := findPathIsExecutable(ctx, paths)
-	if err != nil {
-		return diag.FromErr(err)
+		return apt.ToDiags(err)
 	}
 
 	if err := data.Set("name", name); err != nil {
 		return diag.FromErr(err)
 	}
 
-	if err := data.Set("path", validPath); err != nil {
+	if err := data.Set("path", path); err != nil {
 		return diag.FromErr(err)
 	}
 
@@ -130,17 +80,8 @@ func resourceAptDelete(ctx context.Context, data *schema.ResourceData, m interfa
 
 	name := nameFromAptID(data.Id())
 
-	cmd := exec.CommandContext(ctx, "sudo", "apt-get", "-y", "remove", name)
-
-	out, err := cmd.CombinedOutput()
-	if err != nil {
-		return diag.Diagnostics{
-			diag.Diagnostic{
-				Severity: diag.Error,
-				Summary:  fmt.Sprintf("'%s' returns %v", strings.Join(cmd.Args, " "), err.Error()),
-				Detail:   string(out),
-			},
-		}
+	if err := apt.Uninstall(ctx, name); err != nil {
+		return apt.ToDiags(err)
 	}
 
 	data.SetId("")

@@ -1,17 +1,18 @@
 //go:build apt
 
+// nolint:dupl
 package provider_test
 
 import (
-	"errors"
-	"fmt"
+	"context"
 	"os"
-	"os/exec"
 	"regexp"
 	"testing"
 
+	"github.com/cockroachdb/errors"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/shihanng/terraform-provider-installer/internal/apt"
 )
 
 func TestAccResourceAptBasic(t *testing.T) { // nolint:tparallel
@@ -58,13 +59,9 @@ func testAccCheckAptDestroy(s *terraform.State) error {
 		name := resource.Primary.Attributes["name"]
 
 		if _, err := os.Stat(path); !errors.Is(err, os.ErrNotExist) {
-			cmd := exec.Command("sudo", "apt-get", "-y", "remove", name)
+			uninstallErr := apt.Uninstall(context.Background(), name)
 
-			if out, err := cmd.CombinedOutput(); err != nil {
-				return fmt.Errorf("%s: %w", string(out), err)
-			}
-
-			return fmt.Errorf("unexpect error from stat: %w", err)
+			return errors.CombineErrors(err, uninstallErr)
 		}
 	}
 
