@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/shihanng/terraform-provider-installer/internal/xerrors"
 )
 
 func TestAccDataSourceApt(t *testing.T) {
@@ -39,7 +40,7 @@ func TestAccDataSourceApt(t *testing.T) {
 			Steps: []resource.TestStep{
 				{
 					Config:      testAccDataSourceAptError,
-					ExpectError: regexp.MustCompile("is not installed"),
+					ExpectError: regexp.MustCompile(xerrors.ErrNotInstalled.Error()),
 				},
 			},
 		})

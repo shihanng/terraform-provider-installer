@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/shihanng/terraform-provider-installer/internal/xerrors"
 )
 
 func TestAccDataSourceBrew(t *testing.T) {
@@ -39,7 +40,7 @@ func TestAccDataSourceBrew(t *testing.T) {
 			Steps: []resource.TestStep{
 				{
 					Config:      testAccDataSourceBrewError,
-					ExpectError: regexp.MustCompile("No such keg:"),
+					ExpectError: regexp.MustCompile(xerrors.ErrNotInstalled.Error()),
 				},
 			},
 		})
