@@ -38,7 +38,7 @@ We must provide the value for `-tags` because some tests only runs on specific p
 
 You added a new feature or fixed a bug in **terraform-provider-installer**. Now you want to test it directly with your Terraform configurations in your local machine. Here is what you can do.
 
-1. Run `make install`. This command also installs the provider in `~/.terraform.d/plugins/registry.terraform.io/shihanng/installer/<version>/<os_arch>/terraform-provider-installer`. On macOS, use
+1. Run `make install`. This command installs the provider in `/tmp/tfproviders`. We've setup Terraform in `.terraformrc` to use provider from `/tmp/tfproviders`. On macOS, use
 
    ```
    OS_ARCH=darwin_arm64 make install
@@ -46,6 +46,7 @@ You added a new feature or fixed a bug in **terraform-provider-installer**. Now 
 
 2. Have a look at [./example](./example) for an example of Terraform configuration. You can also use the example for testing, e.g.
    ```
+   export TF_CLI_CONFIG_FILE=$(pwd)/.terraformrc
    terraform -chdir="./example" init
    ```
 

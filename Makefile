@@ -11,8 +11,8 @@ build:
 	goreleaser build --single-target --snapshot --rm-dist
 
 install: build
-	mkdir -p ~/.terraform.d/plugins/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}
-	mv dist/terraform-provider-${NAME}_${OS_ARCH}/* ~/.terraform.d/plugins/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}/${BINARY}
+	mkdir -p /tmp/tfproviders/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}
+	mv dist/terraform-provider-${NAME}_${OS_ARCH}/* /tmp/tfproviders/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}/${BINARY}
 
 test:
 	go test $(TESTARGS) -race -parallel=4 ./...

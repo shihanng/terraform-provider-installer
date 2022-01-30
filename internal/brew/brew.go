@@ -7,6 +7,7 @@ import (
 
 	"github.com/cockroachdb/errors"
 	"github.com/shihanng/terraform-provider-installer/internal/system"
+	"github.com/shihanng/terraform-provider-installer/internal/xerrors"
 )
 
 func Install(ctx context.Context, name string) error {
@@ -25,6 +26,10 @@ func FindInstalled(ctx context.Context, name string) (string, error) {
 
 	out, err := cmd.CombinedOutput()
 	if err != nil {
+		if strings.Contains(string(out), "No such keg") {
+			return "", xerrors.ErrNotInstalled
+		}
+
 		return "", errors.Wrap(errors.WithDetail(err, string(out)), strings.Join(cmd.Args, " "))
 	}
 

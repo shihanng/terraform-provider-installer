@@ -5,6 +5,7 @@ import (
 	"context"
 	"strings"
 
+	"github.com/cockroachdb/errors"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/shihanng/terraform-provider-installer/internal/brew"
@@ -52,7 +53,9 @@ func resourceBrewCreate(ctx context.Context, data *schema.ResourceData, meta int
 
 	data.SetId(brewID(name))
 
-	return resourceBrewRead(ctx, data, meta)
+	resourceBrewRead(ctx, data, meta)
+
+	return diag.Diagnostics{}
 }
 
 func resourceBrewRead(ctx context.Context, data *schema.ResourceData, m interface{}) diag.Diagnostics {
@@ -62,6 +65,12 @@ func resourceBrewRead(ctx context.Context, data *schema.ResourceData, m interfac
 
 	path, err := brew.FindInstalled(ctx, name)
 	if err != nil {
+		if errors.Is(err, xerrors.ErrNotInstalled) {
+			data.SetId("")
+
+			return diags
+		}
+
 		return xerrors.ToDiags(err)
 	}
 

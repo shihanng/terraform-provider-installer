@@ -5,6 +5,7 @@ import (
 	"context"
 	"strings"
 
+	"github.com/cockroachdb/errors"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/shihanng/terraform-provider-installer/internal/apt"
@@ -52,7 +53,9 @@ func resourceAptCreate(ctx context.Context, data *schema.ResourceData, meta inte
 
 	data.SetId(aptID(name))
 
-	return resourceAptRead(ctx, data, meta)
+	resourceAptRead(ctx, data, meta)
+
+	return diag.Diagnostics{}
 }
 
 func resourceAptRead(ctx context.Context, data *schema.ResourceData, m interface{}) diag.Diagnostics {
@@ -62,6 +65,12 @@ func resourceAptRead(ctx context.Context, data *schema.ResourceData, m interface
 
 	path, err := apt.FindInstalled(ctx, name)
 	if err != nil {
+		if errors.Is(err, xerrors.ErrNotInstalled) {
+			data.SetId("")
+
+			return diags
+		}
+
 		return xerrors.ToDiags(err)
 	}
 
