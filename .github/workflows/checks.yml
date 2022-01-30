@@ -7,6 +7,7 @@ on:
 
 env:
   GO_VERSION: "^1.17.0"
+  GORELEASER_VERSION: latest
 
 jobs:
   pre-commit:
@@ -27,6 +28,7 @@ jobs:
           terraform_version: 1.1.4
       - uses: goreleaser/goreleaser-action@v2
         with:
+          version: ${{env.GORELEASER_VERSION}}
           install-only: true
       - uses: terraform-linters/setup-tflint@v1
         with:
