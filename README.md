@@ -44,10 +44,10 @@ You added a new feature or fixed a bug in **terraform-provider-installer**. Now 
    OS_ARCH=darwin_arm64 make install
    ```
 
-2. Have a look at [./example](./example) for an example of Terraform configuration. You can also use the example for testing, e.g.
+2. Have a look at [./examples](./examples) for an example of Terraform configuration. You can also use the example for testing, e.g.
    ```
    export TF_CLI_CONFIG_FILE=$(pwd)/.terraformrc
-   terraform -chdir="./example" init
+   terraform -chdir="./examples" init
    ```
 
 #### Tips
