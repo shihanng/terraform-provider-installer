@@ -1,4 +1,3 @@
-// nolint:dupl
 package provider
 
 import (
@@ -24,18 +23,29 @@ func nameFromAptID(id string) string {
 
 func resourceApt() *schema.Resource {
 	return &schema.Resource{
+		Description: "`installer_apt` manages an application using [APT](https://en.wikipedia.org/wiki/APT_(software)).\n\n" +
+			"It works on systems that use APT as the package management system. " +
+			"Adding an `installer_apt` resource means that Terraform will ensure that " +
+			"the application defined in the `name` argument is made available via APT.",
 		CreateContext: resourceAptCreate,
 		ReadContext:   resourceAptRead,
 		DeleteContext: resourceAptDelete,
 		Schema: map[string]*schema.Schema{
+			"id": {
+				Description: "Internal ID of the resource.",
+				Type:        schema.TypeString,
+				Computed:    true,
+			},
 			"name": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Description: "Name of the application that `apt-get` recognizes.",
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
 			},
 			"path": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Description: "The path where the application is installed by `apt-get` after Terraform creates this resource.",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 		},
 		Importer: &schema.ResourceImporter{
