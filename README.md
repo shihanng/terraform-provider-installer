@@ -4,6 +4,29 @@
 
 - [APT](https://ubuntu.com/server/docs/package-management)
 - [Homebrew](https://brew.sh/)
+- Shell script
+
+The following shows how to install **git** and **starship** through Homebrew using **terraform-provider-installer** provider. See <https://registry.terraform.io/providers/shihanng/installer/latest/docs> for complete documentation.
+
+```tf
+terraform {
+  required_version = "~> 1.1.4"
+  required_providers {
+    installer = {
+      source  = "shihanng/installer"
+    }
+  }
+}
+
+locals {
+  apps = ["git", "starship"]
+}
+
+resource "installer_brew" "this" {
+  for_each = toset(local.apps)
+  name     = each.key
+}
+```
 
 ## Development
 
