@@ -20,15 +20,4 @@ It also supports shell script via the `installer_script` resource.
 There is no configuration on the provider level.
 The following shows how to ensure the system has git and starship installed via Homebrew.
 
-```terraform
-provider "installer" {}
-
-locals {
-  apps = ["git", "starship"]
-}
-
-resource "installer_brew" "this" {
-  for_each = toset(local.apps)
-  name     = each.key
-}
-```
+{{tffile "examples/provider/provider.tf"}}

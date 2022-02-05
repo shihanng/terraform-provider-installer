@@ -1,9 +1,37 @@
+[![Checks](https://github.com/shihanng/terraform-provider-installer/actions/workflows/checks.yml/badge.svg)](https://github.com/shihanng/terraform-provider-installer/actions/workflows/checks.yml)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/shihanng/terraform-provider-installer)
+[![GitHub license](https://img.shields.io/github/license/shihanng/terraform-provider-installer)](https://github.com/shihanng/terraform-provider-installer/blob/trunk/LICENSE)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
+
 # terraform-provider-installer
 
 **terraform-provider-installer** is a [Terraform](https://www.terraform.io/) provider for installing softwares via various package management tools. Currently, **terraform-provider-installer** supports
 
 - [APT](https://ubuntu.com/server/docs/package-management)
 - [Homebrew](https://brew.sh/)
+- Shell script
+
+The following shows how to install **git** and **starship** through Homebrew using **terraform-provider-installer** provider. See <https://registry.terraform.io/providers/shihanng/installer/latest/docs> for complete documentation.
+
+```tf
+terraform {
+  required_version = "~> 1.1.4"
+  required_providers {
+    installer = {
+      source  = "shihanng/installer"
+    }
+  }
+}
+
+locals {
+  apps = ["git", "starship"]
+}
+
+resource "installer_brew" "this" {
+  for_each = toset(local.apps)
+  name     = each.key
+}
+```
 
 ## Development
 
@@ -44,10 +72,10 @@ You added a new feature or fixed a bug in **terraform-provider-installer**. Now 
    OS_ARCH=darwin_arm64 make install
    ```
 
-2. Have a look at [./example](./example) for an example of Terraform configuration. You can also use the example for testing, e.g.
+2. Have a look at [./examples](./examples) for an example of Terraform configuration. You can also use the example for testing, e.g.
    ```
    export TF_CLI_CONFIG_FILE=$(pwd)/.terraformrc
-   terraform -chdir="./example" init
+   terraform -chdir="./examples" init
    ```
 
 #### Tips
