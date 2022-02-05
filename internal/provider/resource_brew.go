@@ -1,4 +1,4 @@
-package provider
+package provider //nolint:dupl
 
 import (
 	"context"
@@ -23,18 +23,29 @@ func nameFromBrewID(id string) string {
 
 func resourceBrew() *schema.Resource {
 	return &schema.Resource{
+		Description: "`installer_brew` manages an application using [Homebrew](https://brew.sh/).\n\n" +
+			"It works on systems that use Homebrew as the package management system. " +
+			"Adding an `installer_brew` resource means that Terraform will ensure that " +
+			"the application defined in the `name` argument is made available via brew.",
 		CreateContext: resourceBrewCreate,
 		ReadContext:   resourceBrewRead,
 		DeleteContext: resourceBrewDelete,
 		Schema: map[string]*schema.Schema{
+			"id": {
+				Description: "Internal ID of the resource.",
+				Type:        schema.TypeString,
+				Computed:    true,
+			},
 			"name": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Description: "Name of the application that `brew` recognizes.",
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
 			},
 			"path": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Description: "The path where the application is installed by `brew` after Terraform creates this resource.",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 		},
 		Importer: &schema.ResourceImporter{

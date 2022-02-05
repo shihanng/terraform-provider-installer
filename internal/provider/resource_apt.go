@@ -1,4 +1,4 @@
-package provider
+package provider //nolint:dupl
 
 import (
 	"context"
