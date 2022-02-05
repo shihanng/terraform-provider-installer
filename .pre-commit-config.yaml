@@ -43,10 +43,9 @@ repos:
 
   - repo: local
     hooks:
-      - id: terraform-plugin-docs
-        name: Run terraform-plugin-docs
-        description: "Runs terraform-plugin-docs"
-        entry: tfplugindocs
-        files: '\.go$'
+      - id: go-generate
+        name: Run go generate
+        description: "Run go generate"
+        entry: go generate ./...
         language: "system"
         pass_filenames: false
