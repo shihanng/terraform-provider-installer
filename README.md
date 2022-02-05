@@ -1,3 +1,8 @@
+[![Checks](https://github.com/shihanng/terraform-provider-installer/actions/workflows/checks.yml/badge.svg)](https://github.com/shihanng/terraform-provider-installer/actions/workflows/checks.yml)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/shihanng/terraform-provider-installer)
+[![GitHub license](https://img.shields.io/github/license/shihanng/terraform-provider-installer)](https://github.com/shihanng/terraform-provider-installer/blob/trunk/LICENSE)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
+
 # terraform-provider-installer
 
 **terraform-provider-installer** is a [Terraform](https://www.terraform.io/) provider for installing softwares via various package management tools. Currently, **terraform-provider-installer** supports
