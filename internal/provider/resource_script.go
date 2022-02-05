@@ -23,24 +23,36 @@ func pathFromScriptID(id string) string {
 
 func resourceScript() *schema.Resource {
 	return &schema.Resource{
+		Description: "`installer_script` manages an application using a custom script.\n\n" +
+			"Adding an `installer_script` resource means that Terraform will install " +
+			"application in the `path` by running the `install_script` when creating the resource.",
 		CreateContext: resourceScriptCreate,
 		ReadContext:   resourceScriptRead,
 		DeleteContext: resourceScriptDelete,
 		Schema: map[string]*schema.Schema{
+			"id": {
+				Description: "Internal ID of the resource.",
+				Type:        schema.TypeString,
+				Computed:    true,
+			},
 			"path": {
+				Description: "is the location of the application installed by the install script. " +
+					"If the application does not exist at path, the resource is considered not exist by Terraform",
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
 			"install_script": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Description: "is the script that will be called by Terraform when executing `terraform plan/apply`.",
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
 			},
 			"uninstall_script": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Description: "is the script that will be called by Terraform when executing `terraform destroy`.",
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
 			},
 		},
 		Importer: &schema.ResourceImporter{
