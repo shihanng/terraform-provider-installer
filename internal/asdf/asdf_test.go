@@ -16,14 +16,10 @@ import (
 func TestASDF(t *testing.T) { //nolint:tparallel
 	t.Parallel()
 
-	reset, err := xtests.SetupASDFDataDir()
+	reset, err := xtests.SetupASDFDataDir(t.TempDir())
 	assert.NilError(t, err)
 
-	t.Cleanup(func() {
-		if err := reset(); err != nil {
-			t.Logf("error during reset temp dir: %v", err)
-		}
-	})
+	t.Cleanup(reset)
 
 	ctx := context.Background()
 

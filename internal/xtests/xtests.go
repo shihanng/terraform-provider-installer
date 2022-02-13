@@ -1,30 +1,20 @@
 package xtests
 
 import (
-	"io/ioutil"
 	"os"
 
 	"github.com/cockroachdb/errors"
 )
 
-func SetupASDFDataDir() (func() error, error) {
-	dir, err := ioutil.TempDir("", "asdf-installer")
-	if err != nil {
-		return nil, errors.Wrap(err, "setup temporary directory for test")
-	}
-
+func SetupASDFDataDir(path string) (func(), error) {
 	reset, err := envSetter(map[string]string{
-		"ASDF_DATA_DIR": dir,
+		"ASDF_DATA_DIR": path,
 	})
 	if err != nil {
 		return nil, err
 	}
 
-	return func() error {
-		reset()
-
-		return errors.Wrap(os.RemoveAll(dir), "remove temporary ASDF_DATA_DIR")
-	}, nil
+	return reset, nil
 }
 
 func envSetter(envs map[string]string) (func(), error) {

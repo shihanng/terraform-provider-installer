@@ -14,17 +14,12 @@ import (
 	"gotest.tools/v3/assert"
 )
 
-func TestAccResourceASDFBasic(t *testing.T) { // nolint:tparallel,dupl
-	t.Parallel()
-
-	reset, err := xtests.SetupASDFDataDir()
+func TestAccResourceASDFBasic(t *testing.T) { // nolint:dupl,paralleltest
+	// Cannot run parallel test because it involves setting environmen variables
+	reset, err := xtests.SetupASDFDataDir(t.TempDir())
 	assert.NilError(t, err)
 
-	t.Cleanup(func() {
-		if err := reset(); err != nil {
-			t.Logf("error during reset temp dir: %v", err)
-		}
-	})
+	t.Cleanup(reset)
 
 	t.Run("resource.installer_asdf", func(t *testing.T) { // nolint:paralleltest // due to locking
 		resource.Test(t, resource.TestCase{
