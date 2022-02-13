@@ -2,22 +2,28 @@ package asdf_test
 
 import (
 	"context"
-	"os"
+	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/cockroachdb/errors"
 	"github.com/shihanng/terraform-provider-installer/internal/asdf"
+	"github.com/shihanng/terraform-provider-installer/internal/xtests"
 	"gotest.tools/v3/assert"
+	"gotest.tools/v3/assert/cmp"
 )
 
 func TestASDF(t *testing.T) { //nolint:tparallel
 	t.Parallel()
 
-	reset := envSetter(map[string]string{
-		"ASDF_DATA_DIR": "/tmp/tfi_asdf",
-	})
+	reset, err := xtests.SetupASDFDataDir()
+	assert.NilError(t, err)
 
-	t.Cleanup(reset)
+	t.Cleanup(func() {
+		if err := reset(); err != nil {
+			t.Logf("error during reset temp dir: %v", err)
+		}
+	})
 
 	ctx := context.Background()
 
@@ -44,7 +50,7 @@ func TestASDF(t *testing.T) { //nolint:tparallel
 	t.Run("run asdf where", func(t *testing.T) { //nolint:paralleltest
 		path, err := asdf.FindInstalled(ctx, name, version)
 		assert.NilError(t, err)
-		assert.Equal(t, path, "/tmp/tfi_asdf/installs/terraform-ls/0.25.2")
+		assert.Assert(t, hasSuffix(path, "installs/terraform-ls/0.25.2"))
 	})
 
 	t.Run("run asdf plugin remove", func(t *testing.T) { //nolint:paralleltest
@@ -52,25 +58,12 @@ func TestASDF(t *testing.T) { //nolint:tparallel
 	})
 }
 
-func envSetter(envs map[string]string) (closer func()) {
-	originals := map[string]string{}
-
-	for name, value := range envs {
-		if val, ok := os.LookupEnv(name); ok {
-			originals[name] = val
+func hasSuffix(actual, suffix string) cmp.Comparison {
+	return func() cmp.Result {
+		if ok := strings.HasSuffix(actual, suffix); ok {
+			return cmp.ResultSuccess
 		}
 
-		_ = os.Setenv(name, value)
-	}
-
-	return func() {
-		for name := range envs {
-			original, ok := originals[name]
-			if ok {
-				_ = os.Setenv(name, original)
-			} else {
-				_ = os.Unsetenv(name)
-			}
-		}
+		return cmp.ResultFailure(fmt.Sprintf("'%s' does not contain suffix '%s'", actual, suffix))
 	}
 }
