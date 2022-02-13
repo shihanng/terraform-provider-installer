@@ -10,6 +10,7 @@
 - [APT](https://ubuntu.com/server/docs/package-management)
 - [Homebrew](https://brew.sh/)
 - Shell script
+- [asdf](https://asdf-vm.com/)
 
 The following shows how to install **git** and **starship** through Homebrew using **terraform-provider-installer** provider. See <https://registry.terraform.io/providers/shihanng/installer/latest/docs> for complete documentation.
 
