@@ -78,6 +78,10 @@ func FindInstalled(ctx context.Context, name, version string) (string, error) {
 
 	out, err := cmd.CombinedOutput()
 	if err != nil {
+		if strings.Contains(string(out), "No such plugin:") {
+			return "", xerrors.ErrNotInstalled
+		}
+
 		return "", errors.Wrap(errors.WithDetail(err, string(out)), strings.Join(cmd.Args, " "))
 	}
 

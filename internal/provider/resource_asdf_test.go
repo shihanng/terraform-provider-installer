@@ -2,7 +2,6 @@ package provider_test
 
 import (
 	"context"
-	"io/ioutil"
 	"regexp"
 	"testing"
 
@@ -15,7 +14,7 @@ import (
 	"gotest.tools/v3/assert"
 )
 
-func TestAccResourceASDFPluginBasic(t *testing.T) { // nolint:tparallel,dupl
+func TestAccResourceASDFBasic(t *testing.T) { // nolint:tparallel,dupl
 	t.Parallel()
 
 	reset, err := xtests.SetupASDFDataDir()
@@ -27,47 +26,48 @@ func TestAccResourceASDFPluginBasic(t *testing.T) { // nolint:tparallel,dupl
 		}
 	})
 
-	t.Run("resource.installer_asdf_plugin", func(t *testing.T) { // nolint:paralleltest // due to locking
+	t.Run("resource.installer_asdf", func(t *testing.T) { // nolint:paralleltest // due to locking
 		resource.Test(t, resource.TestCase{
 			PreCheck:          func() { testAccPreCheck(t) },
 			ProviderFactories: providerFactories,
-			CheckDestroy:      testAccCheckASDFPluginDestroy,
+			CheckDestroy:      testAccCheckASDFDestroy,
 			Steps: []resource.TestStep{
 				{
-					Config: mustReadFile("../../examples/resources/installer_asdf_plugin/resource.tf"),
+					Config: mustReadFile("../../examples/resources/installer_asdf/resource.tf"),
 					Check: resource.ComposeTestCheckFunc(
-						testAccCheckResourceExists("installer_asdf_plugin.this"),
+						testAccCheckResourceExists("installer_asdf.this"),
 					),
 				},
 			},
 		})
 	})
 
-	t.Run("resource.installer_asdf_plugin error", func(t *testing.T) { // nolint:paralleltest // due to locking
+	t.Run("resource.installer_asdf error", func(t *testing.T) { // nolint:paralleltest // due to locking
 		resource.Test(t, resource.TestCase{
 			PreCheck:          func() { testAccPreCheck(t) },
 			ProviderFactories: providerFactories,
-			CheckDestroy:      testAccCheckASDFPluginDestroy,
+			CheckDestroy:      testAccCheckASDFDestroy,
 			Steps: []resource.TestStep{
 				{
-					Config:      testAccResourceASDFPluginBasicError,
-					ExpectError: regexp.MustCompile("plugin (.+) not found in repository"),
+					Config:      testAccResourceASDFBasicError,
+					ExpectError: regexp.MustCompile("No such plugin: (.+)"),
 				},
 			},
 		})
 	})
 }
 
-func testAccCheckASDFPluginDestroy(s *terraform.State) error {
+func testAccCheckASDFDestroy(s *terraform.State) error {
 	for _, resource := range s.RootModule().Resources {
-		if resource.Type != "installer_asdf_plugin" {
+		if resource.Type != "installer_asdf" {
 			continue
 		}
 
 		name := resource.Primary.Attributes["name"]
+		version := resource.Primary.Attributes["version"]
 		ctx := context.Background()
 
-		if _, err := asdf.FindAddedPlugin(ctx, name); !errors.Is(err, xerrors.ErrNotInstalled) {
+		if _, err := asdf.FindInstalled(ctx, name, version); !errors.Is(err, xerrors.ErrNotInstalled) {
 			removeErr := asdf.RemovePlugin(ctx, name)
 
 			return errors.CombineErrors(err, removeErr)
@@ -77,17 +77,9 @@ func testAccCheckASDFPluginDestroy(s *terraform.State) error {
 	return nil
 }
 
-const testAccResourceASDFPluginBasicError = `
-resource "installer_asdf_plugin" "test" {
-  name = "abc"
+const testAccResourceASDFBasicError = `
+resource "installer_asdf" "test" {
+  name    = "abc"
+  version = "v0.1.2"
 }
 `
-
-func mustReadFile(path string) string {
-	content, err := ioutil.ReadFile(path)
-	if err != nil {
-		panic(err)
-	}
-
-	return string(content)
-}
