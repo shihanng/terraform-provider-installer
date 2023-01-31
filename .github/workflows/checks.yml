@@ -35,8 +35,6 @@ jobs:
         with:
           tflint_version: v0.34.1
       - uses: actions/checkout@v2
-      - name: Install tfplugindocs
-        run: go install github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs
       - uses: pre-commit/action@v2.0.3
 
   tests-ubuntu:
