@@ -26,11 +26,11 @@ resource "installer_apt" "this" {
 
 ### Required
 
-- **name** (String) Name of the application that `apt-get` recognizes.
+- `name` (String) Name of the application that `apt-get` recognizes.
 
 ### Read-Only
 
-- **id** (String) Internal ID of the resource.
-- **path** (String) The path where the application is installed by `apt-get` after Terraform creates this resource.
+- `id` (String) Internal ID of the resource.
+- `path` (String) The path where the application is installed by `apt-get` after Terraform creates this resource.
 
 
