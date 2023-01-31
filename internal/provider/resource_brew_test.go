@@ -42,7 +42,7 @@ func TestAccResourceBrewBasic(t *testing.T) { // nolint:tparallel
 			Steps: []resource.TestStep{
 				{
 					Config:      testAccResourceBrewBasicError,
-					ExpectError: regexp.MustCompile("No available formula with the name"),
+					ExpectError: regexp.MustCompile("formula not found"),
 				},
 			},
 		})

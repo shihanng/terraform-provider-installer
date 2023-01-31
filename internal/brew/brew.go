@@ -10,12 +10,18 @@ import (
 	"github.com/shihanng/terraform-provider-installer/internal/xerrors"
 )
 
+var ErrFormulaNotFound = errors.New("formula not found")
+
 func Install(ctx context.Context, name string) error {
 	cmd := exec.CommandContext(ctx, "brew", "install", name)
 
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		return errors.Wrap(errors.WithDetail(err, string(out)), strings.Join(cmd.Args, " "))
+	}
+
+	if strings.Contains(string(out), "Warning: No available formula with the name") {
+		return ErrFormulaNotFound
 	}
 
 	return nil
