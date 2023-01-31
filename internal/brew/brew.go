@@ -32,7 +32,7 @@ func FindInstalled(ctx context.Context, name string) (string, error) {
 
 	out, err := cmd.CombinedOutput()
 	if err != nil {
-		if strings.Contains(string(out), "No such keg") {
+		if strings.Contains(string(out), "No available formula with the name") {
 			return "", xerrors.ErrNotInstalled
 		}
 
