@@ -26,6 +26,7 @@ jobs:
       - uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: 1.1.4
+          terraform_wrapper: false
       - uses: goreleaser/goreleaser-action@v2
         with:
           version: ${{env.GORELEASER_VERSION}}
@@ -34,8 +35,6 @@ jobs:
         with:
           tflint_version: v0.34.1
       - uses: actions/checkout@v2
-      - name: Install tfplugindocs
-        run: go install github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs
       - uses: pre-commit/action@v2.0.3
 
   tests-ubuntu:

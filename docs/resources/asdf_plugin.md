@@ -24,14 +24,14 @@ resource "installer_asdf_plugin" "this" {
 
 ### Required
 
-- **name** (String) is the name of the plugin.
+- `name` (String) is the name of the plugin.
 
 ### Optional
 
-- **git_url** (String) is the Git repository's URL which will be added as the plugin if specified.
+- `git_url` (String) is the Git repository's URL which will be added as the plugin if specified.
 
 ### Read-Only
 
-- **id** (String) Internal ID of the resource.
+- `id` (String) Internal ID of the resource.
 
 

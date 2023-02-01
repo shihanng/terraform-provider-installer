@@ -33,12 +33,12 @@ resource "installer_asdf" "this" {
 
 ### Required
 
-- **name** (String) is the name of the plugin. See `installer_asdf_plugin`.
-- **version** (String) is the version of the plugin that asdf should install.
+- `name` (String) is the name of the plugin. See `installer_asdf_plugin`.
+- `version` (String) is the version of the plugin that asdf should install.
 
 ### Read-Only
 
-- **id** (String) Internal ID of the resource.
-- **path** (String) is the path of the application installed by asdf after Terraform creates the resource.
+- `id` (String) Internal ID of the resource.
+- `path` (String) is the path of the application installed by asdf after Terraform creates the resource.
 
 

@@ -40,12 +40,12 @@ resource "installer_script" "this" {
 
 ### Required
 
-- **install_script** (String) is the script that will be called by Terraform when executing `terraform plan/apply`.
-- **path** (String) is the location of the application installed by the install script. If the application does not exist at path, the resource is considered not exist by Terraform
-- **uninstall_script** (String) is the script that will be called by Terraform when executing `terraform destroy`.
+- `install_script` (String) is the script that will be called by Terraform when executing `terraform plan/apply`.
+- `path` (String) is the location of the application installed by the install script. If the application does not exist at path, the resource is considered not exist by Terraform
+- `uninstall_script` (String) is the script that will be called by Terraform when executing `terraform destroy`.
 
 ### Read-Only
 
-- **id** (String) Internal ID of the resource.
+- `id` (String) Internal ID of the resource.
 
 

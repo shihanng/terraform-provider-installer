@@ -26,11 +26,11 @@ resource "installer_brew" "this" {
 
 ### Required
 
-- **name** (String) Name of the application that `brew` recognizes.
+- `name` (String) Name of the application that `brew` recognizes.
 
 ### Read-Only
 
-- **id** (String) Internal ID of the resource.
-- **path** (String) The path where the application is installed by `brew` after Terraform creates this resource.
+- `id` (String) Internal ID of the resource.
+- `path` (String) The path where the application is installed by `brew` after Terraform creates this resource.
 
 

@@ -68,7 +68,10 @@ func resourceScriptCreate(ctx context.Context, data *schema.ResourceData, meta i
 
 	uninstallScript := data.Get("uninstall_script").(string) // nolint:forcetypeassert
 
-	tflog.Debug(ctx, "run", "install_script", installScript)
+	tflog.Debug(ctx, "run", map[string]interface{}{
+		"install_script":  installScript,
+		"uninstallScript": uninstallScript,
+	})
 
 	if err := script.Run(ctx, installScript); err != nil {
 		return xerrors.ToDiags(err)
@@ -111,7 +114,9 @@ func resourceScriptDelete(ctx context.Context, data *schema.ResourceData, m inte
 
 	uninstallScript := data.Get("uninstall_script").(string) // nolint:forcetypeassert
 
-	tflog.Debug(ctx, "run", "uninstall_script", uninstallScript)
+	tflog.Debug(ctx, "run", map[string]interface{}{
+		"uninstallScript": uninstallScript,
+	})
 
 	if err := script.Run(ctx, uninstallScript); err != nil {
 		return xerrors.ToDiags(err)
