@@ -20,7 +20,7 @@ func Install(ctx context.Context, name string) error {
 		return errors.Wrap(errors.WithDetail(err, string(out)), strings.Join(cmd.Args, " "))
 	}
 
-	if strings.Contains(string(out), "Warning: No available formula with the name") {
+	if strings.Contains(string(out), "No available formula with the name") {
 		return ErrFormulaNotFound
 	}
 
