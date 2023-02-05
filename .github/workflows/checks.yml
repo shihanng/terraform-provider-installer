@@ -6,7 +6,7 @@ on:
     branches: [trunk]
 
 env:
-  GO_VERSION: "^1.17.0"
+  GO_VERSION: "^1.19.0"
   GORELEASER_VERSION: latest
 
 jobs:
