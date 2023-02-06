@@ -35,7 +35,7 @@ jobs:
         with:
           tflint_version: v0.34.1
       - uses: actions/checkout@v3
-      - uses: pre-commit/action@v2.0.3
+      - uses: pre-commit/action@v3.0.0
 
   tests-ubuntu:
     name: Run acceptance tests on Ubuntu
