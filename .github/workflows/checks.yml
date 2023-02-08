@@ -31,7 +31,7 @@ jobs:
         with:
           version: ${{env.GORELEASER_VERSION}}
           install-only: true
-      - uses: terraform-linters/setup-tflint@v1
+      - uses: terraform-linters/setup-tflint@v3
         with:
           tflint_version: v0.34.1
       - uses: actions/checkout@v3
