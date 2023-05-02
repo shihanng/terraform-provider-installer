@@ -3,6 +3,7 @@ package asdf
 import (
 	"bytes"
 	"context"
+	"os"
 	"os/exec"
 	"strings"
 
@@ -62,8 +63,11 @@ func RemovePlugin(ctx context.Context, name string) error {
 	return nil
 }
 
-func Install(ctx context.Context, name, version string) error {
+func Install(ctx context.Context, name, version string, env []string) error {
 	cmd := exec.CommandContext(ctx, "asdf", "install", name, version)
+
+	cmd.Env = os.Environ()
+	cmd.Env = append(cmd.Env, env...)
 
 	out, err := cmd.CombinedOutput()
 	if err != nil {
