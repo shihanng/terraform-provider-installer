@@ -11,8 +11,11 @@ import (
 	"github.com/shihanng/terraform-provider-installer/internal/xerrors"
 )
 
-func AddPlugin(ctx context.Context, name, gitURL string) error {
+func AddPlugin(ctx context.Context, name, gitURL string, env []string) error {
 	cmd := exec.CommandContext(ctx, "asdf", "plugin", "add", name, gitURL)
+
+	cmd.Env = os.Environ()
+	cmd.Env = append(cmd.Env, env...)
 
 	out, err := cmd.CombinedOutput()
 	if err != nil {

@@ -28,6 +28,7 @@ resource "installer_asdf_plugin" "this" {
 
 ### Optional
 
+- `environment` (Map of String) are the environment variables set during the installation.
 - `git_url` (String) is the Git repository's URL which will be added as the plugin if specified.
 
 ### Read-Only

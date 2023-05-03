@@ -28,7 +28,7 @@ func TestASDF(t *testing.T) { //nolint:tparallel
 	version := "0.25.2"
 
 	t.Run("run asdf plugin add", func(t *testing.T) { //nolint:paralleltest
-		assert.NilError(t, asdf.AddPlugin(ctx, name, gitURL))
+		assert.NilError(t, asdf.AddPlugin(ctx, name, gitURL, []string{}))
 	})
 
 	t.Run("run FindAddedPlugin", func(t *testing.T) { //nolint:paralleltest

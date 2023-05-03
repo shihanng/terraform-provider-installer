@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"github.com/cockroachdb/errors"
-	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/shihanng/terraform-provider-installer/internal/asdf"
@@ -76,16 +75,7 @@ func resourceASDFCreate(ctx context.Context, data *schema.ResourceData, meta int
 	version := data.Get("version").(string) // nolint:forcetypeassert
 	environment := data.Get("environment").(map[string]interface{})
 
-	env := make([]string, 0, len(environment))
-
-	for key, value := range environment {
-		tflog.Debug(ctx, "environment", map[string]interface{}{
-			"key":   key,
-			"value": value,
-		})
-
-		env = append(env, fmt.Sprintf("%s=%v", key, value))
-	}
+	env := getEnv(environment)
 
 	if err := asdf.Install(ctx, name, version, env); err != nil {
 		return xerrors.ToDiags(err)
@@ -141,4 +131,14 @@ func resourceASDFDelete(ctx context.Context, data *schema.ResourceData, m interf
 	data.SetId("")
 
 	return diags
+}
+
+func getEnv(environment map[string]interface{}) []string {
+	env := make([]string, 0, len(environment))
+
+	for key, value := range environment {
+		env = append(env, fmt.Sprintf("%s=%v", key, value))
+	}
+
+	return env
 }
