@@ -16,15 +16,19 @@ func Install(ctx context.Context, name string) error {
 	cmd := exec.CommandContext(ctx, "brew", "install", name)
 
 	out, err := cmd.CombinedOutput()
-	if err != nil {
-		return errors.Wrap(errors.WithDetail(err, string(out)), strings.Join(cmd.Args, " "))
+	if err == nil {
+		return nil
 	}
 
-	if strings.Contains(string(out), "No available formula with the name") {
-		return ErrFormulaNotFound
+	var exitError *exec.ExitError
+
+	if errors.As(err, &exitError) {
+		if exitError.ExitCode() == 1 && strings.Contains(string(out), "No available formula with the name") {
+			return ErrFormulaNotFound
+		}
 	}
 
-	return nil
+	return errors.Wrap(errors.WithDetail(err, string(out)), strings.Join(cmd.Args, " "))
 }
 
 func FindInstalled(ctx context.Context, name string) (string, error) {
