@@ -2,6 +2,7 @@ package provider
 
 import (
 	"context"
+	"fmt"
 	"strings"
 
 	"github.com/cockroachdb/errors"
@@ -53,6 +54,15 @@ func resourceASDF() *schema.Resource {
 				Type:        schema.TypeString,
 				Computed:    true,
 			},
+			"environment": {
+				Description: "are the environment variables set during the installation.",
+				Type:        schema.TypeMap,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				ForceNew: true,
+				Optional: true,
+			},
 		},
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
@@ -63,8 +73,11 @@ func resourceASDF() *schema.Resource {
 func resourceASDFCreate(ctx context.Context, data *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	name := data.Get("name").(string)       // nolint:forcetypeassert
 	version := data.Get("version").(string) // nolint:forcetypeassert
+	environment := data.Get("environment").(map[string]interface{})
 
-	if err := asdf.Install(ctx, name, version); err != nil {
+	env := getEnv(environment)
+
+	if err := asdf.Install(ctx, name, version, env); err != nil {
 		return xerrors.ToDiags(err)
 	}
 
@@ -118,4 +131,14 @@ func resourceASDFDelete(ctx context.Context, data *schema.ResourceData, m interf
 	data.SetId("")
 
 	return diags
+}
+
+func getEnv(environment map[string]interface{}) []string {
+	env := make([]string, 0, len(environment))
+
+	for key, value := range environment {
+		env = append(env, fmt.Sprintf("%s=%v", key, value))
+	}
+
+	return env
 }

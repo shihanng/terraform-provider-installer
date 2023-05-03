@@ -36,6 +36,10 @@ resource "installer_asdf" "this" {
 - `name` (String) is the name of the plugin. See `installer_asdf_plugin`.
 - `version` (String) is the version of the plugin that asdf should install.
 
+### Optional
+
+- `environment` (Map of String) are the environment variables set during the installation.
+
 ### Read-Only
 
 - `id` (String) Internal ID of the resource.

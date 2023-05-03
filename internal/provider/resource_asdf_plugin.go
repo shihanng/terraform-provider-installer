@@ -46,6 +46,15 @@ func resourceASDFPlugin() *schema.Resource {
 				ForceNew:    true,
 				Computed:    true,
 			},
+			"environment": {
+				Description: "are the environment variables set during the installation.",
+				Type:        schema.TypeMap,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				ForceNew: true,
+				Optional: true,
+			},
 		},
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
@@ -56,8 +65,11 @@ func resourceASDFPlugin() *schema.Resource {
 func resourceASDFPluginCreate(ctx context.Context, data *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	name := data.Get("name").(string)      // nolint:forcetypeassert
 	gitURL := data.Get("git_url").(string) // nolint:forcetypeassert
+	environment := data.Get("environment").(map[string]interface{})
 
-	if err := asdf.AddPlugin(ctx, name, gitURL); err != nil {
+	env := getEnv(environment)
+
+	if err := asdf.AddPlugin(ctx, name, gitURL, env); err != nil {
 		return xerrors.ToDiags(err)
 	}
 

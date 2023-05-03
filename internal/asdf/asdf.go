@@ -3,6 +3,7 @@ package asdf
 import (
 	"bytes"
 	"context"
+	"os"
 	"os/exec"
 	"strings"
 
@@ -10,8 +11,11 @@ import (
 	"github.com/shihanng/terraform-provider-installer/internal/xerrors"
 )
 
-func AddPlugin(ctx context.Context, name, gitURL string) error {
+func AddPlugin(ctx context.Context, name, gitURL string, env []string) error {
 	cmd := exec.CommandContext(ctx, "asdf", "plugin", "add", name, gitURL)
+
+	cmd.Env = os.Environ()
+	cmd.Env = append(cmd.Env, env...)
 
 	out, err := cmd.CombinedOutput()
 	if err != nil {
@@ -62,8 +66,11 @@ func RemovePlugin(ctx context.Context, name string) error {
 	return nil
 }
 
-func Install(ctx context.Context, name, version string) error {
+func Install(ctx context.Context, name, version string, env []string) error {
 	cmd := exec.CommandContext(ctx, "asdf", "install", name, version)
+
+	cmd.Env = os.Environ()
+	cmd.Env = append(cmd.Env, env...)
 
 	out, err := cmd.CombinedOutput()
 	if err != nil {
