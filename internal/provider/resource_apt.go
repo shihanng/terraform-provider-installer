@@ -37,7 +37,7 @@ func resourceApt() *schema.Resource {
 				Computed:    true,
 			},
 			"name": {
-				Description: "Name of the application that `apt-get` recognizes.",
+				Description: "Name of the application that `apt-get` recognizes. Specify a version of a package by following the package name with an equal sign and the version, e.g., `vim=2:8.2.3995-1ubuntu2.7`.",
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
