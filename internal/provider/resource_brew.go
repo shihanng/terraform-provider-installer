@@ -37,7 +37,7 @@ func resourceBrew() *schema.Resource {
 				Computed:    true,
 			},
 			"name": {
-				Description: "Name of the application that `brew` recognizes.",
+				Description: "Name of the application that `brew` recognizes, e.g., `homebrew/cask/alfred` for a cask, `goreleaser/tap/goreleaser` for tap.",
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,

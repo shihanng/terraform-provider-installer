@@ -26,7 +26,7 @@ resource "installer_brew" "this" {
 
 ### Required
 
-- `name` (String) Name of the application that `brew` recognizes.
+- `name` (String) Name of the application that `brew` recognizes, e.g., `homebrew/cask/alfred` for a cask, `goreleaser/tap/goreleaser` for tap.
 
 ### Optional
 
