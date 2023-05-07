@@ -91,6 +91,7 @@ You added a new feature or fixed a bug in **terraform-provider-installer**. You 
 #### Tips
 
 1. Use `export TF_LOG_PROVIDER=DEBUG` for debugging. See <https://www.terraform.io/internals/debugging>.
+2. Use [Doc Preview Tool](https://registry.terraform.io/tools/doc-preview) to preview generated documentations.
 
 ## References
 
