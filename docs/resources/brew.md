@@ -28,6 +28,10 @@ resource "installer_brew" "this" {
 
 - `name` (String) Name of the application that `brew` recognizes.
 
+### Optional
+
+- `cask` (Boolean) Treat name argument as cask.
+
 ### Read-Only
 
 - `id` (String) Internal ID of the resource.
