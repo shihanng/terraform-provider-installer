@@ -46,7 +46,7 @@ pre-commit install
 
 ### Running automated tests
 
-Run unit tests (no resources will be created/destroy) with
+Run unit tests (no resources will be created/destroyed) with
 
 ```
 make test
@@ -58,10 +58,17 @@ Run acceptance tests with
 make TESTARGS="-tags=apt" testacc
 ```
 
-We must provide the value for `-tags` because some tests only runs on specific platform. Currently the valid values for `-tags` are:
+We must provide the value for `-tags` because some tests only run on a specific platform. Currently, the valid values for `-tags` are:
 
-- `apt` for environment that uses [APT](https://ubuntu.com/server/docs/package-management).
-- `brew` for environment that uses [Homebrew](https://brew.sh/).
+- `apt` for the environment that uses [APT](https://ubuntu.com/server/docs/package-management).
+- `brew` for the environment that uses [Homebrew](https://brew.sh/).
+
+We can also use `go test` in a specific directory. For example, the following runs acceptance tests inside the `brew` directory.
+
+```
+cd ./internal/brew/
+TF_ACC=1 go test -tags=brew
+```
 
 ### Testing with development version
 
