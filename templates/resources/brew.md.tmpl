@@ -1,0 +1,34 @@
+---
+page_title: "{{.Name}} {{.Type}} - {{.ProviderName}}"
+subcategory: ""
+description: |-
+{{ .Description | plainmarkdown | trimspace | prefixlines "  " }}
+---
+
+# {{.Name}} ({{.Type}})
+
+{{ .Description | trimspace }}
+
+## Example Usage
+
+### Basic usage
+
+{{tffile "internal/provider/testdata/resources/brew/resources_brew_basic.tf"}}
+
+### Taps (Third-Party Repositories)
+
+Install a Homebrew tap using its fully qualified name.
+
+{{tffile "internal/provider/testdata/resources/brew/resources_brew_tap.tf"}}
+
+### Casks
+
+Install a Homebrew cask using the `cask=true` argument.
+
+{{tffile "internal/provider/testdata/resources/brew/resources_brew_cask.tf"}}
+
+Install a Homebrew tap using its fully qualified name.
+
+{{tffile "internal/provider/testdata/resources/brew/resources_brew_cask_fqn.tf"}}
+
+{{ .SchemaMarkdown | trimspace }}

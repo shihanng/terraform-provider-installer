@@ -37,10 +37,18 @@ func resourceBrew() *schema.Resource {
 				Computed:    true,
 			},
 			"name": {
-				Description: "Name of the application that `brew` recognizes.",
+				Description: "Name of the application that `brew` recognizes, e.g., `homebrew/cask/alfred` for a cask, `goreleaser/tap/goreleaser` for tap.",
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
+			},
+			"cask": {
+				Description: "Treat name argument as cask.",
+				Type:        schema.TypeBool,
+				Required:    false,
+				ForceNew:    true,
+				Optional:    true,
+				Computed:    true,
 			},
 			"path": {
 				Description: "The path where the application is installed by `brew` after Terraform creates this resource.",
@@ -56,12 +64,20 @@ func resourceBrew() *schema.Resource {
 
 func resourceBrewCreate(ctx context.Context, data *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	name := data.Get("name").(string) // nolint:forcetypeassert
+	cask := data.Get("cask").(bool)   // nolint:forcetypeassert
 
-	if err := brew.Install(ctx, name); err != nil {
+	if err := brew.Install(ctx,
+		brew.NewCmd("install", name, brew.WithCask(cask)).Args); err != nil {
 		return xerrors.ToDiags(err)
 	}
 
-	data.SetId(brewID(name))
+	info, err := brew.GetInfo(ctx,
+		brew.NewCmd("info", name, brew.WithCask(cask), brew.WithJSONV2()).Args)
+	if err != nil {
+		return xerrors.ToDiags(err)
+	}
+
+	data.SetId(brewID(info.Name))
 
 	resourceBrewRead(ctx, data, meta)
 
@@ -73,22 +89,39 @@ func resourceBrewRead(ctx context.Context, data *schema.ResourceData, m interfac
 
 	name := nameFromBrewID(data.Id())
 
-	path, err := brew.FindInstalled(ctx, name)
+	info, err := brew.GetInfo(ctx,
+		brew.NewCmd("info", name, brew.WithJSONV2()).Args)
 	if err != nil {
-		if errors.Is(err, xerrors.ErrNotInstalled) {
+		return xerrors.ToDiags(err)
+	}
+
+	var (
+		path    string
+		pathErr error
+	)
+
+	if info.IsCask {
+		path, pathErr = brew.FindCaskPath(ctx,
+			brew.NewCmd("list", name, brew.WithCask(info.IsCask)).Args)
+	} else {
+		path, pathErr = brew.FindInstalled(ctx, info.Name)
+	}
+
+	if pathErr != nil {
+		if errors.Is(pathErr, xerrors.ErrNotInstalled) {
 			data.SetId("")
 
 			return diags
 		}
 
-		return xerrors.ToDiags(err)
-	}
-
-	if err := data.Set("name", name); err != nil {
-		return diag.FromErr(err)
+		return xerrors.ToDiags(pathErr)
 	}
 
 	if err := data.Set("path", path); err != nil {
+		return diag.FromErr(err)
+	}
+
+	if err := data.Set("cask", info.IsCask); err != nil {
 		return diag.FromErr(err)
 	}
 
