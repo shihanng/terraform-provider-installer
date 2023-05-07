@@ -1,18 +1,14 @@
 .PHONY: test clean all
 
-HOSTNAME=registry.terraform.io
-NAMESPACE=shihanng
 NAME=installer
-VERSION=0.0.1
-BINARY=terraform-provider-${NAME}
 OS_ARCH ?= linux_amd64
 
 build:
-	goreleaser build --single-target --snapshot --rm-dist
+	goreleaser build --snapshot --rm-dist
 
 install: build
-	mkdir -p /tmp/tfproviders/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}
-	mv dist/terraform-provider-${NAME}_${OS_ARCH}/* /tmp/tfproviders/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}/${BINARY}
+	mkdir -p /tmp/tfproviders/
+	mv dist/terraform-provider-${NAME}_${OS_ARCH}/* /tmp/tfproviders/
 
 test:
 	go test $(TESTARGS) -race -parallel=4 ./...

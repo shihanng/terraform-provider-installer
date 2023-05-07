@@ -46,7 +46,7 @@ pre-commit install
 
 ### Running automated tests
 
-Run unit tests (no resources will be created/destroy) with
+Run unit tests (no resources will be created/destroyed) with
 
 ```
 make test
@@ -58,30 +58,40 @@ Run acceptance tests with
 make TESTARGS="-tags=apt" testacc
 ```
 
-We must provide the value for `-tags` because some tests only runs on specific platform. Currently the valid values for `-tags` are:
+We must provide the value for `-tags` because some tests only run on a specific platform. Currently, the valid values for `-tags` are:
 
-- `apt` for environment that uses [APT](https://ubuntu.com/server/docs/package-management).
-- `brew` for environment that uses [Homebrew](https://brew.sh/).
+- `apt` for the environment that uses [APT](https://ubuntu.com/server/docs/package-management).
+- `brew` for the environment that uses [Homebrew](https://brew.sh/).
+
+We can also use `go test` in a specific directory. For example, the following runs acceptance tests inside the `brew` directory.
+
+```
+cd ./internal/brew/
+TF_ACC=1 go test -tags=brew
+```
 
 ### Testing with development version
 
-You added a new feature or fixed a bug in **terraform-provider-installer**. Now you want to test it directly with your Terraform configurations in your local machine. Here is what you can do.
+You added a new feature or fixed a bug in **terraform-provider-installer**. You want to test it directly with your Terraform configurations on your local machine. Here is what you can do.
 
-1. Run `make install`. This command installs the provider in `/tmp/tfproviders`. We've setup Terraform in `.terraformrc` to use provider from `/tmp/tfproviders`. On macOS, use
+1. Run `make install`. This command installs the provider in `/tmp/tfproviders`. We've set up Terraform in `.terraformrc` to use provider from `/tmp/tfproviders`. Specify the OS and architecture using `OS_ARCH`, e.g., on Apple Silicon macOS, use
 
    ```
    OS_ARCH=darwin_arm64 make install
    ```
 
-2. Have a look at [./examples](./examples) for an example of Terraform configuration. You can also use the example for testing, e.g.
+2. Use the `.terraformrc` file in this repository to override the published provider.
+
    ```
    export TF_CLI_CONFIG_FILE=$(pwd)/.terraformrc
-   terraform -chdir="./examples" init
+   terraform init
+   terraform plan
    ```
 
 #### Tips
 
 1. Use `export TF_LOG_PROVIDER=DEBUG` for debugging. See <https://www.terraform.io/internals/debugging>.
+2. Use [Doc Preview Tool](https://registry.terraform.io/tools/doc-preview) to preview generated documentations.
 
 ## References
 
