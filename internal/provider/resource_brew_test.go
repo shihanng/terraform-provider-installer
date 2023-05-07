@@ -25,9 +25,9 @@ func TestAccResourceBrewBasic(t *testing.T) { // nolint:tparallel
 			CheckDestroy:      testAccCheckBrewDestroy,
 			Steps: []resource.TestStep{
 				{
-					Config: testAccResourceBrewBasic,
+					Config: readTFFile("./testdata/resources/brew/resources_brew_basic.tf"),
 					Check: resource.ComposeTestCheckFunc(
-						testAccCheckResourceExists("installer_brew.test"),
+						testAccCheckResourceExists("installer_brew.basic"),
 					),
 				},
 			},
@@ -68,14 +68,17 @@ func testAccCheckBrewDestroy(s *terraform.State) error {
 	return nil
 }
 
-const testAccResourceBrewBasic = `
-resource "installer_brew" "test" {
-  name = "cowsay"
-}
-`
-
 const testAccResourceBrewBasicError = `
 resource "installer_brew" "test" {
   name = "abc"
 }
 `
+
+func readTFFile(path string) string {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		panic(err)
+	}
+
+	return string(data)
+}
