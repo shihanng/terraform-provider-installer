@@ -72,18 +72,20 @@ TF_ACC=1 go test -tags=brew
 
 ### Testing with development version
 
-You added a new feature or fixed a bug in **terraform-provider-installer**. Now you want to test it directly with your Terraform configurations in your local machine. Here is what you can do.
+You added a new feature or fixed a bug in **terraform-provider-installer**. You want to test it directly with your Terraform configurations on your local machine. Here is what you can do.
 
-1. Run `make install`. This command installs the provider in `/tmp/tfproviders`. We've setup Terraform in `.terraformrc` to use provider from `/tmp/tfproviders`. On macOS, use
+1. Run `make install`. This command installs the provider in `/tmp/tfproviders`. We've set up Terraform in `.terraformrc` to use provider from `/tmp/tfproviders`. Specify the OS and architecture using `OS_ARCH`, e.g., on Apple Silicon macOS, use
 
    ```
    OS_ARCH=darwin_arm64 make install
    ```
 
-2. Have a look at [./examples](./examples) for an example of Terraform configuration. You can also use the example for testing, e.g.
+2. Use the `.terraformrc` file in this repository to override the published provider.
+
    ```
    export TF_CLI_CONFIG_FILE=$(pwd)/.terraformrc
-   terraform -chdir="./examples" init
+   terraform init
+   terraform plan
    ```
 
 #### Tips
