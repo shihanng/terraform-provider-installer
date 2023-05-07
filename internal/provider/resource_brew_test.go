@@ -34,6 +34,54 @@ func TestAccResourceBrewBasic(t *testing.T) { // nolint:tparallel
 		})
 	})
 
+	t.Run("resource.installer_brew_tap", func(t *testing.T) { // nolint:paralleltest // due to locking
+		resource.Test(t, resource.TestCase{
+			PreCheck:          func() { testAccPreCheck(t) },
+			ProviderFactories: providerFactories,
+			CheckDestroy:      testAccCheckBrewDestroy,
+			Steps: []resource.TestStep{
+				{
+					Config: readTFFile("./testdata/resources/brew/resources_brew_tap.tf"),
+					Check: resource.ComposeTestCheckFunc(
+						testAccCheckResourceExists("installer_brew.tap"),
+					),
+				},
+			},
+		})
+	})
+
+	t.Run("resource.installer_brew_cask", func(t *testing.T) { // nolint:paralleltest // due to locking
+		resource.Test(t, resource.TestCase{
+			PreCheck:          func() { testAccPreCheck(t) },
+			ProviderFactories: providerFactories,
+			CheckDestroy:      testAccCheckBrewDestroy,
+			Steps: []resource.TestStep{
+				{
+					Config: readTFFile("./testdata/resources/brew/resources_brew_cask.tf"),
+					Check: resource.ComposeTestCheckFunc(
+						testAccCheckResourceExists("installer_brew.cask"),
+					),
+				},
+			},
+		})
+	})
+
+	t.Run("resource.installer_brew_cask_fqn", func(t *testing.T) { // nolint:paralleltest // due to locking
+		resource.Test(t, resource.TestCase{
+			PreCheck:          func() { testAccPreCheck(t) },
+			ProviderFactories: providerFactories,
+			CheckDestroy:      testAccCheckBrewDestroy,
+			Steps: []resource.TestStep{
+				{
+					Config: readTFFile("./testdata/resources/brew/resources_brew_cask_fqn.tf"),
+					Check: resource.ComposeTestCheckFunc(
+						testAccCheckResourceExists("installer_brew.cask_fqn"),
+					),
+				},
+			},
+		})
+	})
+
 	t.Run("resource.installer_brew error", func(t *testing.T) { // nolint:paralleltest // due to locking
 		resource.Test(t, resource.TestCase{
 			PreCheck:          func() { testAccPreCheck(t) },
