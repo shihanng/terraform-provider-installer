@@ -4,7 +4,7 @@ NAME=installer
 OS_ARCH ?= linux_amd64
 
 build:
-	goreleaser build --snapshot --rm-dist
+	goreleaser build --snapshot --clean
 
 install: build
 	mkdir -p /tmp/tfproviders/

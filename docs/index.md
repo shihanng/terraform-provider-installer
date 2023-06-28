@@ -24,7 +24,7 @@ The following shows how to ensure the system has git and starship installed via 
 provider "installer" {}
 
 locals {
-  apps = ["git", "starship"]
+  apps = ["tmux"]
 }
 
 resource "installer_brew" "this" {

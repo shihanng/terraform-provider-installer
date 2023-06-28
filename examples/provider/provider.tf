@@ -1,7 +1,7 @@
 provider "installer" {}
 
 locals {
-  apps = ["git", "starship"]
+  apps = ["tmux"]
 }
 
 resource "installer_brew" "this" {
