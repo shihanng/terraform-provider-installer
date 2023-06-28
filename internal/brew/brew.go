@@ -81,10 +81,8 @@ func GetInfo(ctx context.Context, args []string) (Info, error) {
 
 	var infoV2 InfoV2
 
-	// fmt.Printf("%+v\n", out)
 	if err := json.Unmarshal(out, &infoV2); err != nil {
-		// fmt.Printf("%+v\n", out)
-		return Info{}, errors.Wrapf(err, "failed to decode InfoV2. out: %s", string(out))
+		return Info{}, errors.Wrap(errors.WithDetail(err, string(out)), "failed to decode InfoV2. out: %s")
 	}
 
 	return infoV2.GetInfo(), nil
@@ -176,6 +174,6 @@ func WithCask(isCask bool) CmdOption {
 
 func WithJSONV2() CmdOption {
 	return func(c *Cmd) {
-		c.Args = append(c.Args, "--json=v2")
+		c.Args = append(c.Args, "--json=v2 --formulae")
 	}
 }
