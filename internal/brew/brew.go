@@ -82,7 +82,7 @@ func GetInfo(ctx context.Context, args []string) (Info, error) {
 	var infoV2 InfoV2
 
 	if err := json.Unmarshal(out, &infoV2); err != nil {
-		return Info{}, errors.Wrap(errors.WithDetail(err, string(out)), "failed to decode InfoV2. out: %s")
+		return Info{}, errors.Wrap(errors.WithDetail(err, string(out)), "failed to decode InfoV2")
 	}
 
 	return infoV2.GetInfo(), nil
