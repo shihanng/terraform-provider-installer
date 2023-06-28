@@ -7,6 +7,7 @@ build:
 	goreleaser build --snapshot --clean
 
 install: build
+	rm -rf /tmp/tfproviders/
 	mkdir -p /tmp/tfproviders/
 	mv dist/terraform-provider-${NAME}_${OS_ARCH}/* /tmp/tfproviders/
 

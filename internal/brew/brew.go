@@ -169,13 +169,14 @@ func WithCask(isCask bool) CmdOption {
 	return func(c *Cmd) {
 		if isCask {
 			c.Args = append(c.Args, "--cask")
+		} else {
+			c.Args = append(c.Args, "--formulae")
 		}
 	}
 }
 
 func WithJSONV2() CmdOption {
 	return func(c *Cmd) {
-		// c.Args = append(c.Args, "--json=v2 --formulae")
 		c.Args = append(c.Args, "--json=v2")
 	}
 }
