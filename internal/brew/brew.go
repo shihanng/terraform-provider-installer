@@ -175,6 +175,7 @@ func WithCask(isCask bool) CmdOption {
 
 func WithJSONV2() CmdOption {
 	return func(c *Cmd) {
-		c.Args = append(c.Args, "--json=v2 --formulae")
+		// c.Args = append(c.Args, "--json=v2 --formulae")
+		c.Args = append(c.Args, "--json=v2")
 	}
 }
