@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"fmt"
 	"os/exec"
 	"path/filepath"
 	"strings"
@@ -82,10 +81,10 @@ func GetInfo(ctx context.Context, args []string) (Info, error) {
 
 	var infoV2 InfoV2
 
-	fmt.Printf("%+v\n", out)
+	// fmt.Printf("%+v\n", out)
 	if err := json.Unmarshal(out, &infoV2); err != nil {
-		fmt.Printf("%+v\n", out)
-		return Info{}, errors.Wrap(err, "failed to decode InfoV2")
+		// fmt.Printf("%+v\n", out)
+		return Info{}, errors.Wrapf(err, "failed to decode InfoV2. out: %+v", out)
 	}
 
 	return infoV2.GetInfo(), nil
