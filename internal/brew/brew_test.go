@@ -2,6 +2,7 @@ package brew_test
 
 import (
 	"context"
+	"strings"
 	"testing"
 
 	"github.com/cockroachdb/errors"
@@ -20,6 +21,7 @@ func TestBrew(t *testing.T) { //nolint:tparallel
 	ctx := context.Background()
 
 	name := "cowsay"
+	nameCask := "tiny-player"
 
 	t.Run("check brew cmd", func(t *testing.T) { //nolint:paralleltest
 		want := &brew.Cmd{
@@ -55,25 +57,57 @@ func TestBrew(t *testing.T) { //nolint:tparallel
 		assert.NilError(t, err)
 	})
 
+	t.Run("check brew cask install", func(t *testing.T) { //nolint:paralleltest
+		err := brew.Install(ctx, brew.NewCmd("install", nameCask, brew.WithCask(true)).Args)
+		t.Log(errors.FlattenDetails(err))
+		assert.NilError(t, err)
+	})
+
 	t.Run("brew install cask must fail", func(t *testing.T) { //nolint:paralleltest
 		err := brew.Install(ctx, brew.NewCmd("install", name, brew.WithCask(true)).Args)
 		t.Log(errors.FlattenDetails(err))
 		assert.Assert(t, err != nil)
 	})
 
-	// t.Run("run asdf install", func(t *testing.T) { //nolint:paralleltest
-	// 	err := asdf.Install(ctx, name, version, []string{})
-	// 	t.Log(errors.FlattenDetails(err))
-	// 	assert.NilError(t, err)
-	// })
+	t.Run("check info", func(t *testing.T) { //nolint:paralleltest
+		want := brew.Info{
+			Name:   "homebrew/core/cowsay",
+			IsCask: false,
+		}
 
-	// t.Run("run asdf where", func(t *testing.T) { //nolint:paralleltest
-	// 	path, err := asdf.FindInstalled(ctx, name, version)
-	// 	assert.NilError(t, err)
-	// 	assert.Assert(t, hasSuffix(path, "installs/terraform-ls/0.25.2"))
-	// })
+		got, err := brew.GetInfo(ctx, brew.NewCmd("info", name, brew.WithCask(false), brew.WithJSONV2()).Args)
+		t.Log(errors.FlattenDetails(err))
+		assert.NilError(t, err)
+		assert.DeepEqual(t, want, got)
+	})
 
-	// t.Run("run asdf plugin remove", func(t *testing.T) { //nolint:paralleltest
-	// 	assert.NilError(t, asdf.RemovePlugin(ctx, name))
-	// })
+	t.Run("check info", func(t *testing.T) { //nolint:paralleltest
+		want := brew.Info{
+			Name:   "homebrew/core/cowsay",
+			IsCask: false,
+		}
+
+		got, err := brew.GetInfo(ctx, brew.NewCmd("info", name, brew.WithCask(false), brew.WithJSONV2()).Args)
+		t.Log(errors.FlattenDetails(err))
+		assert.NilError(t, err)
+		assert.DeepEqual(t, want, got)
+	})
+
+	t.Run("run brew list", func(t *testing.T) { //nolint:paralleltest
+		path, err := brew.FindInstalled(ctx, name)
+		assert.NilError(t, err)
+		ok := strings.HasSuffix(path, "bin/cowsay")
+		assert.Equal(t, ok, true)
+	})
+
+	t.Run("run brew list cask", func(t *testing.T) { //nolint:paralleltest
+    path, err := brew.FindCaskPath(ctx, brew.NewCmd("list", nameCask, brew.WithCask(true)).Args)
+		assert.NilError(t, err)
+		ok := strings.HasSuffix(path, "Tiny Player.app")
+		assert.Equal(t, ok, true)
+	})
+
+	t.Run("run brew uninstall", func(t *testing.T) { //nolint:paralleltest
+		assert.NilError(t, brew.Uninstall(ctx, name))
+	})
 }
