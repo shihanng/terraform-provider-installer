@@ -12,12 +12,6 @@ import (
 
 func TestBrew(t *testing.T) { //nolint:tparallel
 	t.Parallel()
-
-	// reset, err := xtests.SetupASDFDataDir(t.TempDir())
-	// assert.NilError(t, err)
-
-	// t.Cleanup(reset)
-
 	ctx := context.Background()
 
 	name := "cowsay"
@@ -101,7 +95,7 @@ func TestBrew(t *testing.T) { //nolint:tparallel
 	})
 
 	t.Run("run brew list cask", func(t *testing.T) { //nolint:paralleltest
-    path, err := brew.FindCaskPath(ctx, brew.NewCmd("list", nameCask, brew.WithCask(true)).Args)
+		path, err := brew.FindCaskPath(ctx, brew.NewCmd("list", nameCask, brew.WithCask(true)).Args)
 		assert.NilError(t, err)
 		ok := strings.HasSuffix(path, "Tiny Player.app")
 		assert.Equal(t, ok, true)
