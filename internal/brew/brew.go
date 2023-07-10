@@ -74,7 +74,9 @@ func (i *InfoV2) GetInfo() Info {
 func GetInfo(ctx context.Context, args []string) (Info, error) {
 	cmd := exec.CommandContext(ctx, "brew", args...)
 
-	out, err := cmd.CombinedOutput()
+	// Check stdout only as there might be warnings in stderr, like:
+	// Warning: Treating docker as a formula. For the cask, use homebrew/cask/docker
+	out, err := cmd.Output()
 	if err != nil {
 		return Info{}, errors.Wrap(errors.WithDetail(err, string(out)), strings.Join(cmd.Args, " "))
 	}
@@ -82,7 +84,7 @@ func GetInfo(ctx context.Context, args []string) (Info, error) {
 	var infoV2 InfoV2
 
 	if err := json.Unmarshal(out, &infoV2); err != nil {
-		return Info{}, errors.Wrap(err, "failed to decode InfoV2")
+		return Info{}, errors.Wrap(errors.WithDetail(err, string(out)), "failed to decode InfoV2")
 	}
 
 	return infoV2.GetInfo(), nil
@@ -168,8 +170,6 @@ func WithCask(isCask bool) CmdOption {
 	return func(c *Cmd) {
 		if isCask {
 			c.Args = append(c.Args, "--cask")
-		} else {
-			c.Args = append(c.Args, "--formulae")
 		}
 	}
 }
