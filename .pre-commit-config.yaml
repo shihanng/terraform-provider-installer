@@ -18,7 +18,7 @@ repos:
       - id: go-mod-tidy
 
   - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: "v1.62.3"
+    rev: "v1.81.0"
     hooks:
       - id: terraform_fmt
       - id: terraform_tflint
