@@ -82,6 +82,22 @@ func TestAccResourceBrewBasic(t *testing.T) { // nolint:tparallel
 		})
 	})
 
+	t.Run("resource.installer_brew_cask_treat_as_formula", func(t *testing.T) { // nolint:paralleltest // due to locking
+		resource.Test(t, resource.TestCase{
+			PreCheck:          func() { testAccPreCheck(t) },
+			ProviderFactories: providerFactories,
+			CheckDestroy:      testAccCheckBrewDestroy,
+			Steps: []resource.TestStep{
+				{
+					Config: readTFFile("./testdata/resources/brew/resources_brew_treat_as_formula.tf"),
+					Check: resource.ComposeTestCheckFunc(
+						testAccCheckResourceExists("installer_brew.treat_as_formula"),
+					),
+				},
+			},
+		})
+	})
+
 	t.Run("resource.installer_brew error", func(t *testing.T) { // nolint:paralleltest // due to locking
 		resource.Test(t, resource.TestCase{
 			PreCheck:          func() { testAccPreCheck(t) },
