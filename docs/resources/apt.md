@@ -32,5 +32,3 @@ resource "installer_apt" "this" {
 
 - `id` (String) Internal ID of the resource.
 - `path` (String) The path where the application is installed by `apt-get` after Terraform creates this resource.
-
-
