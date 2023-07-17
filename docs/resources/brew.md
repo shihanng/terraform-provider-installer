@@ -56,7 +56,7 @@ resource "installer_brew" "cask_fqn" {
 
 ### Required
 
-- `name` (String) Name of the application that `brew` recognizes, e.g., `homebrew/cask/alfred` for a cask, `goreleaser/tap/goreleaser` for tap.
+- `name` (String) Name of the application that `brew` recognizes, e.g., `homebrew/cask/alfred` for a cask, `goreleaser/tap/goreleaser` for tap. Treats a package as a formula if `cask` is not set or false
 
 ### Optional
 

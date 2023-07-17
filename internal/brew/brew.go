@@ -74,7 +74,9 @@ func (i *InfoV2) GetInfo() Info {
 func GetInfo(ctx context.Context, args []string) (Info, error) {
 	cmd := exec.CommandContext(ctx, "brew", args...)
 
-	out, err := cmd.CombinedOutput()
+	// Check stdout only as there might be warnings in stderr, which break the unmarshalling later, like:
+	// "Warning: Treating dash as a formula. For the cask, use homebrew/cask/dash"
+	out, err := cmd.Output()
 	if err != nil {
 		return Info{}, errors.Wrap(errors.WithDetail(err, string(out)), strings.Join(cmd.Args, " "))
 	}
@@ -82,7 +84,7 @@ func GetInfo(ctx context.Context, args []string) (Info, error) {
 	var infoV2 InfoV2
 
 	if err := json.Unmarshal(out, &infoV2); err != nil {
-		return Info{}, errors.Wrap(err, "failed to decode InfoV2")
+		return Info{}, errors.Wrap(errors.WithDetail(err, string(out)), "failed to decode InfoV2")
 	}
 
 	return infoV2.GetInfo(), nil
