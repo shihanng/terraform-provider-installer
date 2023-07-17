@@ -34,5 +34,3 @@ resource "installer_asdf_plugin" "this" {
 ### Read-Only
 
 - `id` (String) Internal ID of the resource.
-
-

@@ -23,5 +23,3 @@ description: |-
 
 - `id` (String) The ID of this resource.
 - `path` (String)
-
-

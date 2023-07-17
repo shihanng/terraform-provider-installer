@@ -47,5 +47,3 @@ resource "installer_script" "this" {
 ### Read-Only
 
 - `id` (String) Internal ID of the resource.
-
-

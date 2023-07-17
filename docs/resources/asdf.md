@@ -44,5 +44,3 @@ resource "installer_asdf" "this" {
 
 - `id` (String) Internal ID of the resource.
 - `path` (String) is the path of the application installed by asdf after Terraform creates the resource.
-
-
