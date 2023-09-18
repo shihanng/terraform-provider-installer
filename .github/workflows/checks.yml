@@ -27,7 +27,7 @@ jobs:
         with:
           terraform_version: 1.1.4
           terraform_wrapper: false
-      - uses: goreleaser/goreleaser-action@v4
+      - uses: goreleaser/goreleaser-action@v5
         with:
           version: ${{env.GORELEASER_VERSION}}
           install-only: true
